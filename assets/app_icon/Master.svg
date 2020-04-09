@@ -1,0 +1,8 @@
+<svg id="Master" xmlns="http://www.w3.org/2000/svg" width="1024" height="1024" viewBox="0 0 1024 1024">
+  <g id="Background">
+    <rect id="Blue_Rectangle" data-name="Blue Rectangle" width="1024" height="1024" fill="#0a9a1c"/>
+  </g>
+  <g id="Group_1" data-name="Group 1" transform="translate(394.975 313.799)">
+    <path id="Icon_material-hourglass-empty" data-name="Icon material-hourglass-empty" d="M9,3V122.776h.2l-.2.2,79.851,79.651L9,282.478l.2.2H9V402.255H248.553V282.678h-.2l.2-.2L168.7,202.627l79.851-79.651-.2-.2h.2V3ZM208.627,292.46v69.87H48.925V292.46l79.851-79.851Zm-79.851-99.814L48.925,112.8V42.925h159.7V112.8Z" transform="translate(-9 -3)" fill="#fff"/>
+  </g>
+</svg>

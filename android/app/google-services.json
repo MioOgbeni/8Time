@@ -1,0 +1,48 @@
+{
+  "project_info": {
+    "project_number": "1092596585912",
+    "firebase_url": "https://eighttime-zulul.firebaseio.com",
+    "project_id": "eighttime-zulul",
+    "storage_bucket": "eighttime-zulul.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:1092596585912:android:6bddba92e4afe59f20eb4d",
+        "android_client_info": {
+          "package_name": "com.eighttime"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "1092596585912-b4scs8fs5bos09r081f4lptt79a85n1v.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.eighttime",
+            "certificate_hash": "da285a977850f4628fea8b2dbce59c5167a71c1a"
+          }
+        },
+        {
+          "client_id": "1092596585912-45pom8ndu3u1damadh1kv51v2e9his2d.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBmWNuObTEh724CBmFOBhvbCEtB5upiKLM"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "1092596585912-45pom8ndu3u1damadh1kv51v2e9his2d.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
