@@ -1,12 +1,17 @@
 import 'package:eighttime/models/user.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:google_sign_in/google_sign_in.dart';
 
 class AuthService {
   final FirebaseAuth _auth = FirebaseAuth.instance;
+  final GoogleSignIn _googleSignIn = GoogleSignIn();
 
   // create user obj based on FirebaseUser
   User _userFromFirebaseUser(FirebaseUser user) {
-    return user != null ? User(uid: user.uid) : null;
+    return user != null ? User(uid: user.uid,
+        mail: user.email,
+        name: user.displayName,
+        photoUrl: user.photoUrl.replaceAll("=s96-c", "=s1080-c")) : null;
   }
 
   // auth change user stream
@@ -17,8 +22,19 @@ class AuthService {
   // sign in with Google
   Future signInGoogle() async {
     try {
-      AuthResult result = await _auth.signInAnonymously();
+      GoogleSignInAccount googleUser = await _googleSignIn.signIn();
+
+      final GoogleSignInAuthentication googleAuth = await googleUser
+          .authentication;
+
+      final AuthCredential credential = GoogleAuthProvider.getCredential(
+        accessToken: googleAuth.accessToken,
+        idToken: googleAuth.idToken,
+      );
+
+      AuthResult result = await _auth.signInWithCredential(credential);
       FirebaseUser user = result.user;
+      googleUser = await _googleSignIn.signOut();
       return _userFromFirebaseUser(user);
     } catch (e) {
       print(e.toString());
@@ -29,4 +45,13 @@ class AuthService {
 // register wth Google
 
 // sign out
+  Future signOut() async {
+    try {
+      return await _auth.signOut();
+    } catch (e) {
+      print(e.toString());
+      print("SignOut Error");
+      return null;
+    }
+  }
 }

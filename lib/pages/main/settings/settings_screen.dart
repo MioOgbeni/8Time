@@ -1,5 +1,8 @@
+import 'package:eighttime/models/user.dart';
+import 'package:eighttime/services/auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 
 class SettingsScreen extends StatefulWidget {
   SettingsScreen({Key key}) : super(key: key);
@@ -9,14 +12,145 @@ class SettingsScreen extends StatefulWidget {
 }
 
 class _SettingsScreenState extends State<SettingsScreen> {
+  final AuthService _auth = AuthService();
+
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      body: Center(
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: <Widget>[Text("SettingsPage")],
-        ),
+    return Container(
+      color: Colors.white,
+      child: ListView(
+        shrinkWrap: false,
+        children: <Widget>[
+          Container(
+            height: 230,
+            child:
+            Card(
+              color: Colors.white,
+              elevation: 3.0,
+              shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(0)),
+              margin: EdgeInsets.only(bottom: 10),
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                crossAxisAlignment: CrossAxisAlignment.center,
+                children: <Widget>[
+                  Container(
+                      width: 110.0,
+                      height: 110.0,
+                      decoration: new BoxDecoration(
+                          shape: BoxShape.circle,
+                          image: new DecorationImage(
+                              fit: BoxFit.fill,
+                              image: new NetworkImage(Provider
+                                  .of<User>(context)
+                                  .photoUrl)
+                          )
+                      )
+                  ),
+                  Padding(
+                    padding: EdgeInsets.only(top: 10.0),
+                  ),
+                  Text(Provider
+                      .of<User>(context)
+                      .name,
+                    style: TextStyle(
+                        color: Colors.black,
+                        fontSize: 22,
+                        fontWeight: FontWeight.w600
+                    ),
+                  ),
+                  Padding(
+                    padding: EdgeInsets.only(top: 10.0),
+                  ),
+                  SizedBox(
+                    height: 32,
+                    child: RaisedButton(
+                      color: Colors.white,
+                      onPressed: () async {
+                        await _auth.signOut();
+                      },
+                      shape: RoundedRectangleBorder(
+                        borderRadius: new BorderRadius.circular(8.0),
+                        side: BorderSide(
+                          color: Theme
+                              .of(context)
+                              .primaryColor,
+                          width: 2,
+                        ),
+                      ),
+                      child: Text("Sign out",
+                        style: TextStyle(
+                          color: Colors.black,
+                          fontSize: 12.0,
+                        ),
+                      ),
+                    ),
+                  )
+                ],
+              ),
+            ),
+          ),
+          Container(
+            height: 50,
+            margin: EdgeInsets.only(bottom: 10),
+            color: Colors.amber[500],
+            child: const Center(child: Text('Entry B')),
+          ),
+          Container(
+            height: 50,
+            margin: EdgeInsets.only(bottom: 10),
+            color: Colors.amber[500],
+            child: const Center(child: Text('Entry B')),
+          ),
+          Container(
+            height: 50,
+            margin: EdgeInsets.only(bottom: 10),
+            color: Colors.amber[500],
+            child: const Center(child: Text('Entry B')),
+          ),
+          Container(
+            height: 50,
+            margin: EdgeInsets.only(bottom: 10),
+            color: Colors.amber[500],
+            child: const Center(child: Text('Entry B')),
+          ),
+          Container(
+            height: 50,
+            margin: EdgeInsets.only(bottom: 10),
+            color: Colors.amber[500],
+            child: const Center(child: Text('Entry B')),
+          ),
+          Container(
+            height: 50,
+            margin: EdgeInsets.only(bottom: 10),
+            color: Colors.amber[500],
+            child: const Center(child: Text('Entry B')),
+          ),
+          Container(
+            height: 50,
+            margin: EdgeInsets.only(bottom: 10),
+            color: Colors.amber[500],
+            child: const Center(child: Text('Entry B')),
+          ),
+          Container(
+            height: 50,
+            margin: EdgeInsets.only(bottom: 10),
+            color: Colors.amber[500],
+            child: const Center(child: Text('Entry B')),
+          ),
+          Container(
+            height: 50,
+            margin: EdgeInsets.only(bottom: 10),
+            color: Colors.amber[500],
+            child: const Center(child: Text('Entry B')),
+          ),
+          Container(
+            height: 50,
+            margin: EdgeInsets.only(bottom: 10),
+            color: Colors.amber[500],
+            child: const Center(child: Text('Entry B')),
+          ),
+        ],
       ),
     );
   }

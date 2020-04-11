@@ -96,6 +96,7 @@ class _HomeState extends State<Home> {
                   },
                   child: Container(
                     height: 55,
+                    color: Colors.white,
                     width: MediaQuery.of(context).size.width / 5 - 4,
                     child: Column(
                       mainAxisAlignment: MainAxisAlignment.center,
@@ -126,6 +127,7 @@ class _HomeState extends State<Home> {
                   },
                   child: Container(
                     height: 55,
+                    color: Colors.white,
                     width: MediaQuery.of(context).size.width / 5 - 4,
                     child: Column(
                         mainAxisAlignment: MainAxisAlignment.center,
@@ -156,6 +158,7 @@ class _HomeState extends State<Home> {
               ),
               Container(
                 height: 55,
+                color: Colors.white,
                 width: MediaQuery.of(context).size.width / 5 + 16,
                 child: OverflowBox(
                   maxHeight: 75,
@@ -200,6 +203,7 @@ class _HomeState extends State<Home> {
                   },
                   child: Container(
                     height: 55,
+                    color: Colors.white,
                     width: MediaQuery.of(context).size.width / 5 - 4,
                     child: Column(
                       mainAxisAlignment: MainAxisAlignment.center,
@@ -238,6 +242,7 @@ class _HomeState extends State<Home> {
                   },
                   child: Container(
                     height: 55,
+                    color: Colors.white,
                     width: MediaQuery.of(context).size.width / 5 - 4,
                     child: Column(
                       mainAxisAlignment: MainAxisAlignment.center,
