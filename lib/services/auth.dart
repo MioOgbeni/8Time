@@ -1,4 +1,5 @@
 import 'package:eighttime/models/user.dart';
+import 'package:eighttime/services/database.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 
@@ -34,7 +35,12 @@ class AuthService {
 
       AuthResult result = await _auth.signInWithCredential(credential);
       FirebaseUser user = result.user;
+
       googleUser = await _googleSignIn.signOut();
+
+      // create fist activities for new user
+      DatabaseService(user.uid).initialActivitiesCreate();
+
       return _userFromFirebaseUser(user);
     } catch (e) {
       print(e.toString());

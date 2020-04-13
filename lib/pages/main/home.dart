@@ -1,7 +1,7 @@
 import 'package:eighttime/pages/main/dashboard/dashboard_screen.dart';
 import 'package:eighttime/pages/main/qr_code/qr_code_screen.dart';
 import 'package:eighttime/pages/main/settings/settings_screen.dart';
-import 'package:eighttime/pages/main/sliding_up_panel.dart';
+import 'package:eighttime/pages/main/sliding_up_panel/sliding_up_panel.dart';
 import 'package:eighttime/pages/main/timeline/timeline_screen.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -24,6 +24,7 @@ class _HomeState extends State<Home> {
   @override
   void initState() {
     super.initState();
+
     _currentIndex = 0;
     _quickActivitiesPressed = false;
     _pageController = PageController();

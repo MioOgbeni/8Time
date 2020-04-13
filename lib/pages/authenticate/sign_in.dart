@@ -49,7 +49,7 @@ class _SignInState extends State<SignIn> {
                 crossAxisAlignment: CrossAxisAlignment.center,
                 children: <Widget>[
                   Text(
-                    "Please create account with",
+                    "Please create your account",
                     style: TextStyle(
                         color: Colors.black,
                         fontWeight: FontWeight.w600,
@@ -73,22 +73,6 @@ class _SignInState extends State<SignIn> {
                         print(result.photoUrl);
                       }
                     },
-                  ),
-                  Text(
-                    "or",
-                    style: TextStyle(
-                        color: Colors.black,
-                        fontWeight: FontWeight.w600,
-                        fontSize: 16
-                    ),
-                  ),
-                  Text(
-                    "TODO Facebook_Auth",
-                    style: TextStyle(
-                        color: Colors.grey,
-                        fontWeight: FontWeight.w600,
-                        fontSize: 15
-                    ),
                   ),
                 ],
               ),

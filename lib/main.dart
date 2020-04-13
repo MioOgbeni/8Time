@@ -9,6 +9,7 @@ import 'package:eighttime/pages/splash/splash_screen.dart';
 import 'package:eighttime/pages/wrapper.dart';
 import 'package:eighttime/services/auth.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:provider/provider.dart';
 
 var routes = <String, WidgetBuilder>{
@@ -21,18 +22,25 @@ var routes = <String, WidgetBuilder>{
   '/settings': (BuildContext context) => SettingsScreen(),
 };
 
-var primaryColor = Color.fromRGBO(10, 154, 28, 1.0);
+const primaryColor = Color.fromRGBO(10, 154, 28, 1.0);
+const errorColor = Color.fromRGBO(219, 64, 64, 1.0);
 
 void main() => runApp(MyApp());
 
 class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
+    SystemChrome.setPreferredOrientations([
+      DeviceOrientation.portraitUp,
+      DeviceOrientation.portraitDown,
+    ]);
     return StreamProvider<User>.value(
       value: AuthService().user,
       child: MaterialApp(
+
           theme: ThemeData(primaryColor: primaryColor,
               buttonColor: primaryColor,
+              errorColor: errorColor,
               fontFamily: 'Segoe UI'),
           debugShowCheckedModeBanner: false,
           home: SplashScreen(),

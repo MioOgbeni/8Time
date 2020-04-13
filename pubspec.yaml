@@ -14,7 +14,7 @@ description: TimeTracking application 8Time.
 version: 1.0.0+1
 
 environment:
-  sdk: ">=2.1.0 <3.0.0"
+  sdk: ">=2.2.2 <3.0.0"
 
 dependencies:
   flutter:
@@ -36,6 +36,8 @@ dependencies:
   flutter_icons: ^1.0.0+1
   provider: ^4.0.4
   flutter_signin_button: ^1.0.0
+  cached_network_image: ^2.1.0+1
+  dart_numerics: ^0.0.5
 
 dev_dependencies:
   flutter_test:
