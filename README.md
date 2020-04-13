@@ -1,4 +1,4 @@
-<img src="https://raw.githubusercontent.com/MioOgbeni/8Time/master/logo.png" alt="8Time" style="width: 600px;"/>
+<img src="https://raw.githubusercontent.com/MioOgbeni/8Time/master/logo.png" alt="8Time" style="width: 800px;"/>
 
 Timetracking Flutter application 8Time.
 
