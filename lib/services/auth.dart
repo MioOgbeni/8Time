@@ -3,6 +3,8 @@ import 'package:eighttime/services/database.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 
+import '../main.dart';
+
 class AuthService {
   final FirebaseAuth _auth = FirebaseAuth.instance;
   final GoogleSignIn _googleSignIn = GoogleSignIn();
@@ -47,12 +49,10 @@ class AuthService {
       return null;
     }
   }
-
-// register wth Google
-
 // sign out
   Future signOut() async {
     try {
+      isAuthenticated = false;
       return await _auth.signOut();
     } catch (e) {
       print(e.toString());

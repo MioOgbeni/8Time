@@ -24,6 +24,7 @@ var routes = <String, WidgetBuilder>{
 
 const primaryColor = Color.fromRGBO(10, 154, 28, 1.0);
 const errorColor = Color.fromRGBO(219, 64, 64, 1.0);
+bool isAuthenticated = false;
 
 void main() => runApp(MyApp());
 

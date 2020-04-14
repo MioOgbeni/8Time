@@ -1,5 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:table_calendar/table_calendar.dart';
 
 class TimelineScreen extends StatefulWidget {
   TimelineScreen({Key key}) : super(key: key);
@@ -9,6 +10,14 @@ class TimelineScreen extends StatefulWidget {
 }
 
 class _TimelineScreenState extends State<TimelineScreen> {
+  CalendarController _calendarController;
+
+  @override
+  void initState() {
+    _calendarController = CalendarController();
+    super.initState();
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -23,15 +32,19 @@ class _TimelineScreenState extends State<TimelineScreen> {
             Text(
               "Timeline",
               style:
-                  TextStyle(color: Colors.black, fontWeight: FontWeight.bold),
+              TextStyle(color: Colors.black, fontWeight: FontWeight.bold),
             ),
           ],
         ),
       ),
       body: Center(
         child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: <Widget>[Text("TimelinePage")],
+          mainAxisAlignment: MainAxisAlignment.start,
+          children: <Widget>[
+            TableCalendar(
+              calendarController: _calendarController,
+            )
+          ],
         ),
       ),
     );

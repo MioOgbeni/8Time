@@ -44,7 +44,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
                         progressIndicatorBuilder: (context, url,
                             downloadProgress) =>
                             CircularProgressIndicator(
-                                valueColor: new AlwaysStoppedAnimation<Color>(
+                                valueColor: AlwaysStoppedAnimation<Color>(
                                     Theme
                                         .of(context)
                                         .primaryColor),
