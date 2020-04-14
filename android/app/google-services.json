@@ -15,6 +15,14 @@
       },
       "oauth_client": [
         {
+          "client_id": "1092596585912-8vuo53ki6j2bo5dd56u1343gr6poua4t.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.eighttime",
+            "certificate_hash": "8324e819aa4a428c207c55227d01d20fecc699a4"
+          }
+        },
+        {
           "client_id": "1092596585912-b4scs8fs5bos09r081f4lptt79a85n1v.apps.googleusercontent.com",
           "client_type": 1,
           "android_info": {
