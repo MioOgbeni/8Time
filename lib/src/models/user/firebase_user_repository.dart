@@ -1,5 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:eighttime/activities_repository.dart';
+import 'package:eighttime/service_locator.dart';
 import 'package:eighttime/src/models/user/user.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:google_sign_in/google_sign_in.dart';
@@ -23,12 +24,10 @@ class FirebaseUserRepository {
     );
     await _firebaseAuth.signInWithCredential(credential);
 
-    FirebaseUser user = await _firebaseAuth.currentUser();
+    var repository = injector.get<FirebaseActivitiesRepository>();
+    await repository.setCollectionReference();
 
-    FirebaseActivitiesRepository activitiesRepository =
-        FirebaseActivitiesRepository(userUid: user.uid);
-
-    var activitiesCount = await activitiesRepository.activitiesCount();
+    var activitiesCount = await repository.activitiesCount();
 
     if (activitiesCount <= 0) {
       List<Activity> activities = List();
@@ -37,7 +36,7 @@ class FirebaseUserRepository {
       activities
           .add(Activity("End work", IconEnum.exitToApp, ColorEnum.red, 1));
 
-      activities.forEach((item) => activitiesRepository.addNewActivity(item));
+      activities.forEach((item) => repository.addNewActivity(item));
     }
 
     return _firebaseAuth.currentUser();

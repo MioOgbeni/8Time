@@ -20,7 +20,7 @@ class LoginBloc extends Bloc<LoginEvent, LoginState> {
 
   Stream<LoginState> _mapLoginWithGooglePressedToState() async* {
     try {
-      await injector<FirebaseUserRepository>().signInWithGoogle();
+      await injector.get<FirebaseUserRepository>().signInWithGoogle();
       yield LoginState.success();
     } catch (e) {
       print(e);

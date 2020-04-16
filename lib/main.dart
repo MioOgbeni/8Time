@@ -27,14 +27,7 @@ void main() {
   WidgetsFlutterBinding.ensureInitialized();
   BlocSupervisor.delegate = SimpleBlocDelegate();
   setupLocator();
-  runApp(
-    BlocProvider(
-      create: (context) =>
-      injector<AuthenticationBloc>()
-        ..add(AppStarted()),
-      child: App(),
-    ),
-  );
+  runApp(App());
 }
 
 class App extends StatelessWidget {
@@ -50,12 +43,12 @@ class App extends StatelessWidget {
         providers: [
           BlocProvider(
             create: (context) =>
-            injector<AuthenticationBloc>()
+            injector.get<AuthenticationBloc>()
               ..add(AppStarted()),
           ),
           BlocProvider(
             create: (context) =>
-            injector<ActivitiesBloc>()
+            injector.get<ActivitiesBloc>()
               ..add(LoadActivities()),
           ),
         ],

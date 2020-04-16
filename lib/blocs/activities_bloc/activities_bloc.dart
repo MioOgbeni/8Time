@@ -3,8 +3,7 @@ import 'dart:async';
 import 'package:bloc/bloc.dart';
 import 'package:eighttime/activities_repository.dart';
 import 'package:eighttime/blocs/activities_bloc/bloc.dart';
-
-import '../../service_locator.dart';
+import 'package:eighttime/service_locator.dart';
 
 class ActivitiesBloc extends Bloc<ActivitiesEvent, ActivitiesState> {
   StreamSubscription _activitiesSubscription;
@@ -32,7 +31,7 @@ class ActivitiesBloc extends Bloc<ActivitiesEvent, ActivitiesState> {
   }
 
   Stream<ActivitiesState> _mapLoadActivitiesToState() async* {
-    var repository = injector<FirebaseActivitiesRepository>();
+    var repository = injector.get<FirebaseActivitiesRepository>();
     _activitiesSubscription?.cancel();
     _activitiesSubscription = repository.activities().listen(
           (activities) => add(ActivitiesUpdated(activities)),
@@ -40,25 +39,25 @@ class ActivitiesBloc extends Bloc<ActivitiesEvent, ActivitiesState> {
   }
 
   Stream<ActivitiesState> _mapAddActivityToState(AddActivity event) async* {
-    var repository = injector<FirebaseActivitiesRepository>();
+    var repository = injector.get<FirebaseActivitiesRepository>();
     repository.addNewActivity(event.activity);
   }
 
   Stream<ActivitiesState> _mapUpdateActivityToState(
       UpdateActivity event) async* {
-    var repository = injector<FirebaseActivitiesRepository>();
+    var repository = injector.get<FirebaseActivitiesRepository>();
     repository.updateActivity(event.activity);
   }
 
   Stream<ActivitiesState> _mapUpdateActivitiesToState(
       UpdateActivities event) async* {
-    var repository = injector<FirebaseActivitiesRepository>();
+    var repository = injector.get<FirebaseActivitiesRepository>();
     event.activities.forEach((item) => repository.updateActivity(item));
   }
 
   Stream<ActivitiesState> _mapDeleteActivityToState(
       DeleteActivity event) async* {
-    var repository = injector<FirebaseActivitiesRepository>();
+    var repository = injector.get<FirebaseActivitiesRepository>();
     repository.deleteActivity(event.activity);
   }
 

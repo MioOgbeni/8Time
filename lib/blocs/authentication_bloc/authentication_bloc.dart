@@ -3,7 +3,7 @@ import 'dart:async';
 import 'package:bloc/bloc.dart';
 import 'package:eighttime/blocs/authentication_bloc/bloc.dart';
 import 'package:eighttime/service_locator.dart';
-import 'package:eighttime/services/firebase_user_repository_service.dart';
+import 'package:eighttime/src/models/user/firebase_user_repository.dart';
 
 class AuthenticationBloc
     extends Bloc<AuthenticationEvent, AuthenticationState> {
@@ -27,11 +27,11 @@ class AuthenticationBloc
   }
 
   Stream<AuthenticationState> _mapAppStartedToState() async* {
-    var repository = injector<FirebaseUserRepositoryService>().repository;
+    var repository = injector.get<FirebaseUserRepository>();
     try {
       final isSignedIn = await repository.isSignedIn();
       if (!isSignedIn) {
-        await repository.signInWithGoogle();
+        yield Unauthenticated();
       }
       final user = await repository.getUser();
       yield Authenticated(user);
@@ -41,12 +41,12 @@ class AuthenticationBloc
   }
 
   Stream<AuthenticationState> _mapLoggedInToState() async* {
-    var repository = injector<FirebaseUserRepositoryService>().repository;
+    var repository = injector.get<FirebaseUserRepository>();
     yield Authenticated(await repository.getUser());
   }
 
   Stream<AuthenticationState> _mapLoggedOutToState() async* {
-    var repository = injector<FirebaseUserRepositoryService>().repository;
+    var repository = injector.get<FirebaseUserRepository>();
     yield Unauthenticated();
     repository.signOut();
   }

@@ -16,11 +16,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return BlocBuilder<AuthenticationBloc, AuthenticationState>(
-      // ignore: missing_return
-      builder: (context, state) {
-        if (state is Authenticated) {
-          return Container(
+    return Container(
             color: Colors.white,
             child: ListView(
               shrinkWrap: false,
@@ -41,7 +37,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
                             width: 110.0,
                             height: 110.0,
                             child: CachedNetworkImage(
-                              imageUrl: state.user.photoUrl,
+                              imageUrl: 'Provider.of<AuthenticationBloc>(context).state',
                               progressIndicatorBuilder: (context, url,
                                   downloadProgress) =>
                                   CircularProgressIndicator(
@@ -87,7 +83,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
                           padding: EdgeInsets.only(top: 10.0),
                         ),
                         Text(
-                          state.user.name,
+                          'Provider.of<AuthenticationBloc>(context).state',
                           style: TextStyle(
                               color: Colors.black,
                               fontSize: 22,
@@ -190,8 +186,5 @@ class _SettingsScreenState extends State<SettingsScreen> {
               ],
             ),
           );
-        }
-      },
-    );
   }
 }

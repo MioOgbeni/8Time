@@ -3,15 +3,18 @@ import 'dart:async';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:eighttime/activities_repository.dart';
 import 'package:eighttime/src/entities/activity_entity.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 
 class FirebaseActivitiesRepository implements ActivitiesRepository {
   CollectionReference activityCollection;
 
-  FirebaseActivitiesRepository({String userUid}) {
-    activityCollection = Firestore.instance
-        .collection('users')
-        .document(userUid)
-        .collection('activities');
+  FirebaseActivitiesRepository();
+
+  Future<void> setCollectionReference() async {
+    FirebaseUser user = await FirebaseAuth.instance.currentUser();
+    activityCollection =
+        Firestore.instance.collection('users').document(user.uid).collection(
+            'activities');
   }
 
   @override
