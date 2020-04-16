@@ -1,6 +1,7 @@
 import 'dart:async';
 
 import 'package:bloc/bloc.dart';
+import 'package:eighttime/activities_repository.dart';
 import 'package:eighttime/blocs/authentication_bloc/bloc.dart';
 import 'package:eighttime/service_locator.dart';
 import 'package:eighttime/src/models/user/firebase_user_repository.dart';
@@ -34,6 +35,9 @@ class AuthenticationBloc
         yield Unauthenticated();
       }
       final user = await repository.getUser();
+      var activitiesRepository = injector.get<FirebaseActivitiesRepository>();
+      await activitiesRepository.setCollectionReference();
+
       yield Authenticated(user);
     } catch (_) {
       yield Unauthenticated();

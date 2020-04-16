@@ -10,15 +10,17 @@ class FirebaseActivitiesRepository implements ActivitiesRepository {
 
   FirebaseActivitiesRepository();
 
-  Future<void> setCollectionReference() async {
+  Future<void> setCollectionReference({String userUid}) async {
     FirebaseUser user = await FirebaseAuth.instance.currentUser();
     activityCollection =
-        Firestore.instance.collection('users').document(user.uid).collection(
-            'activities');
+        Firestore.instance.collection('users')
+            .document(userUid ?? user.uid)
+            .collection('activities');
   }
 
   @override
   Future<int> activitiesCount() async {
+    await setCollectionReference();
     QuerySnapshot qs = await activityCollection.getDocuments();
     qs.documents.length;
     return qs.documents.length;
@@ -30,7 +32,7 @@ class FirebaseActivitiesRepository implements ActivitiesRepository {
   }
 
   @override
-  Future<void> deleteActivity(Activity activity) async {
+  Future<void> deleteActivity(Activity activity) {
     return activityCollection.document(activity.documentUid).delete();
   }
 
