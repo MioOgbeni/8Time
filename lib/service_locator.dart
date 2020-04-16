@@ -9,12 +9,17 @@ import 'package:get_it/get_it.dart';
 GetIt injector = GetIt.instance;
 
 void setupLocator() {
-  injector.registerSingleton<AuthenticationBloc>(AuthenticationBloc());
-  injector.registerSingleton<SplashScreenBloc>(SplashScreenBloc());
-  injector.registerSingleton<LoginBloc>(LoginBloc());
-  injector.registerSingleton<ActivitiesBloc>(ActivitiesBloc());
+  injector.registerFactory<AuthenticationBloc>(() => (AuthenticationBloc(
+      firebaseUserRepository: injector(),
+      firebaseActivitiesRepository: injector())));
+
+  injector.registerFactory<SplashScreenBloc>(() => SplashScreenBloc());
+  injector.registerFactory<LoginBloc>(
+      () => LoginBloc(firebaseUserRepository: injector()));
+  injector.registerFactory<ActivitiesBloc>(
+      () => ActivitiesBloc(firebaseActivitiesRepository: injector()));
 
   injector.registerSingleton<FirebaseUserRepository>(FirebaseUserRepository());
-  injector.registerLazySingleton<FirebaseActivitiesRepository>(() =>
-      FirebaseActivitiesRepository());
+  injector.registerLazySingleton<FirebaseActivitiesRepository>(
+      () => FirebaseActivitiesRepository());
 }

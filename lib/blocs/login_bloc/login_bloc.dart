@@ -2,11 +2,13 @@ import 'dart:async';
 
 import 'package:bloc/bloc.dart';
 import 'package:eighttime/blocs/login_bloc/bloc.dart';
-import 'package:eighttime/service_locator.dart';
 import 'package:eighttime/src/models/user/firebase_user_repository.dart';
+import 'package:flutter/cupertino.dart';
 
 class LoginBloc extends Bloc<LoginEvent, LoginState> {
-  LoginBloc();
+  final FirebaseUserRepository firebaseUserRepository;
+
+  LoginBloc({@required this.firebaseUserRepository});
 
   @override
   LoginState get initialState => LoginState.empty();
@@ -20,7 +22,7 @@ class LoginBloc extends Bloc<LoginEvent, LoginState> {
 
   Stream<LoginState> _mapLoginWithGooglePressedToState() async* {
     try {
-      await injector.get<FirebaseUserRepository>().signInWithGoogle();
+      await firebaseUserRepository.signInWithGoogle();
       yield LoginState.success();
     } catch (e) {
       print(e);
