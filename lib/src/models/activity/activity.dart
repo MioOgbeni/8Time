@@ -1,4 +1,5 @@
 import 'package:eighttime/main.dart';
+import 'package:eighttime/src/entities/activity_entity.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_icons/flutter_icons.dart';
 
@@ -21,26 +22,63 @@ enum IconEnum {
   error
 }
 
+@immutable
 class Activity {
-  String name;
-  IconEnum icon;
-  ColorEnum color;
-  int order;
-  bool available;
+  final String name;
+  final IconEnum icon;
+  final ColorEnum color;
+  final int order;
   final String documentUid;
 
-  Activity({this.name, this.icon, this.color, this.order, this.documentUid});
+  Activity(this.name, this.icon, this.color, this.order, {this.documentUid});
 
-  Map<String, dynamic> toMap() {
-    return {
-      'name': name,
-      'icon': icon.index,
-      'color': color.index,
-      'order': order
-    };
+  Activity copyWith(
+      {String name, IconEnum icon, ColorEnum color, int order, String documentUid}) {
+    return Activity(
+      name ?? this.name,
+      icon ?? this.icon,
+      color ?? this.color,
+      order ?? this.order,
+      documentUid: documentUid ?? this.documentUid,
+    );
   }
 
-  static Activity fromMap(Map<String, dynamic> map, String documentUid) {
+  @override
+  int get hashCode =>
+      name.hashCode ^ icon.hashCode ^ color.hashCode ^ order
+          .hashCode ^ documentUid.hashCode;
+
+  @override
+  bool operator ==(Object other) =>
+      identical(this, other) ||
+          other is Activity &&
+              runtimeType == other.runtimeType &&
+              name == other.name &&
+              icon == other.icon &&
+              color == other.color &&
+              order == other.order &&
+              documentUid == other.documentUid;
+
+  @override
+  String toString() {
+    return 'Activity { name: $name, icon: $icon, color: $color, order: $order, documentUid: $documentUid }';
+  }
+
+  ActivityEntity toEntity() {
+    return ActivityEntity(name, icon.index, color.index, order, documentUid);
+  }
+
+  static Activity fromEntity(ActivityEntity entity) {
+    return Activity(
+      entity.name,
+      IconEnum.values[entity.icon],
+      ColorEnum.values[entity.color],
+      entity.order,
+      documentUid: entity.documentUid,
+    );
+  }
+
+  /*static Activity fromMap(Map<String, dynamic> map, String documentUid) {
     if (map == null) return null;
 
     return Activity(
@@ -49,7 +87,7 @@ class Activity {
         color: ColorEnum.values[map['color']],
         order: map['order'],
         documentUid: documentUid);
-  }
+  }*/
 
   static enumToIcon([IconEnum icon]) {
     switch (icon) {

@@ -1,89 +1,44 @@
-import 'dart:async';
-
-import 'package:eighttime/utils/my_navigator.dart';
+import 'package:eighttime/blocs/authentication_bloc/bloc.dart';
+import 'package:eighttime/blocs/splash_screen_bloc/bloc.dart';
+import 'package:eighttime/pages/splash/splash_screen_widget.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 
-class SplashScreen extends StatefulWidget {
-  @override
-  _SplashScreenState createState() => _SplashScreenState();
-}
-
-class _SplashScreenState extends State<SplashScreen> {
-  @override
-  void initState() {
-    super.initState();
-    Timer(Duration(seconds: 2), () => MyNavigator.goToWrapper(context));
-  }
-
+class SplashScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        body: Stack(
-      fit: StackFit.expand,
-      children: <Widget>[
-        Container(
-          decoration: BoxDecoration(color: Colors.white),
-        ),
-        Column(
-          mainAxisAlignment: MainAxisAlignment.start,
-          children: <Widget>[
-            Expanded(
-              flex: 2,
-              child: Container(
-                child: Column(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: <Widget>[
-                    Icon(
-                      Icons.hourglass_empty,
-                      color: Theme.of(context).primaryColor,
-                      size: 100.0,
-                    ),
-                    Text(
-                      "8Time",
-                      style: TextStyle(
-                          color: Theme.of(context).primaryColor,
-                          fontWeight: FontWeight.bold,
-                          fontSize: 40.0),
-                    )
-                  ],
-                ),
-              ),
+      body: BlocProvider(
+        create: (BuildContext context) => SplashScreenBloc(),
+        child: Container(
+          height: MediaQuery
+              .of(context)
+              .size
+              .height,
+          width: MediaQuery
+              .of(context)
+              .size
+              .width,
+          color: Colors.orange,
+          child: Center(
+            child: BlocBuilder<SplashScreenBloc, SplashScreenState>(
+              // ignore: missing_return
+              builder: (context, state) {
+                if ((state is Initial) || (state is Loading)) {
+                  return SplashScreenWidget();
+                }
+                if (state is Loaded) {
+                  BlocProvider.of<AuthenticationBloc>(context).add(
+                      AppStarted()
+                  );
+                  return SplashScreenWidget();
+                }
+              },
             ),
-            Expanded(
-              flex: 1,
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.end,
-                children: <Widget>[
-                  SizedBox(
-                    child: CircularProgressIndicator(
-                      valueColor: new AlwaysStoppedAnimation<Color>(
-                          Theme.of(context).primaryColor),
-                      strokeWidth: 3.0,
-                    ),
-                    height: 20.0,
-                    width: 20.0,
-                  ),
-                  Padding(
-                    padding: EdgeInsets.only(top: 15.0),
-                  ),
-                  Text(
-                    "Loading...",
-                    softWrap: true,
-                    textAlign: TextAlign.center,
-                    style: TextStyle(
-                        fontWeight: FontWeight.normal,
-                        fontSize: 14.0,
-                        color: Colors.black),
-                  ),
-                  Padding(
-                    padding: EdgeInsets.only(top: 20.0),
-                  ),
-                ],
-              ),
-            )
-          ],
-        )
-      ],
-    ));
+          ),
+        ),
+      ),
+    );
   }
 }

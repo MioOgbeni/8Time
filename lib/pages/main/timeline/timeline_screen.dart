@@ -1,3 +1,4 @@
+import 'package:eighttime/main.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:table_calendar/table_calendar.dart';
@@ -42,7 +43,28 @@ class _TimelineScreenState extends State<TimelineScreen> {
           mainAxisAlignment: MainAxisAlignment.start,
           children: <Widget>[
             TableCalendar(
+
               calendarController: _calendarController,
+              initialCalendarFormat: CalendarFormat.week,
+              headerVisible: false,
+              formatAnimation: FormatAnimation.slide,
+              startingDayOfWeek: StartingDayOfWeek.monday,
+              daysOfWeekStyle: DaysOfWeekStyle(
+                weekendStyle: TextStyle().copyWith(color: primaryColor),
+              ),
+              builders: CalendarBuilders(
+
+              ),
+              calendarStyle: CalendarStyle(
+                  weekendStyle: TextStyle().copyWith(color: primaryColor),
+                  todayColor: primaryColor.withOpacity(0.2),
+                  todayStyle: TextStyle(
+                      color: Colors.black
+                  ),
+                  selectedColor: primaryColor,
+                  outsideDaysVisible: false
+
+              ),
             )
           ],
         ),

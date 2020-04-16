@@ -1,23 +1,26 @@
-import 'package:eighttime/models/activity.dart';
-import 'package:eighttime/models/user.dart';
-import 'package:eighttime/services/database.dart';
+import 'package:eighttime/activities_repository.dart';
+import 'package:eighttime/blocs/activities_bloc/bloc.dart';
 import 'package:flutter/material.dart';
-import 'package:provider/provider.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 
 import 'activityEditForm.dart';
 
+// ignore: must_be_immutable
 class ActivitiesList extends StatefulWidget {
+  List<Activity> activities;
+
+  ActivitiesList({Key key, this.activities}) : super(key: key);
+
   @override
   _ActivitiesListState createState() => _ActivitiesListState();
 }
 
+
 class _ActivitiesListState extends State<ActivitiesList> {
   @override
   Widget build(BuildContext context) {
-    final activities = Provider.of<List<Activity>>(context);
-
-    if (activities != null) {
-      activities.sort((a, b) => a.order.compareTo(b.order));
+    if (widget.activities != null) {
+      widget.activities.sort((a, b) => a.order.compareTo(b.order));
     }
 
     return Container(
@@ -25,27 +28,27 @@ class _ActivitiesListState extends State<ActivitiesList> {
       child: ReorderableListView(
         onReorder: (oldIndex, newIndex) {
           setState(() {
-            if (activities != null) {
+            if (widget.activities != null) {
               if (newIndex > oldIndex) {
                 newIndex -= 1;
               }
 
-              final Activity item = activities.removeAt(oldIndex);
-              activities.insert(newIndex, item);
+              final Activity item = widget.activities.removeAt(oldIndex);
+              widget.activities.insert(newIndex, item);
 
-              for (var i = 0; i < activities.length; i++) {
-                activities[i].order = i;
-                DatabaseService(Provider
-                    .of<User>(context, listen: false)
-                    .uid)
-                    .editActivity(activities[i]);
+              for (var i = 0; i < widget.activities.length; i++) {
+                widget.activities[i] = widget.activities[i].copyWith(order: i);
               }
+
+              BlocProvider.of<ActivitiesBloc>(context).add(
+                UpdateActivities(widget.activities),
+              );
             }
           });
         },
         children: <Widget>[
-          if(activities != null)
-            for (final item in activities)
+          if(widget.activities != null)
+            for (final item in widget.activities)
               Card(
                 key: ValueKey(item),
                 child: ListTile(

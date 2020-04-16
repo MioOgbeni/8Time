@@ -1,12 +1,11 @@
 import 'dart:math';
 
+import 'package:eighttime/activities_repository.dart';
+import 'package:eighttime/blocs/activities_bloc/bloc.dart';
 import 'package:eighttime/main.dart';
-import 'package:eighttime/models/activity.dart';
-import 'package:eighttime/models/user.dart';
-import 'package:eighttime/services/database.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:provider/provider.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:sliding_up_panel/sliding_up_panel.dart';
 
 // ignore: must_be_immutable
@@ -74,8 +73,10 @@ class _ActivityEditFormState extends State<ActivityEditForm> {
                     TextStyle(color: Colors.white, fontWeight: FontWeight.w600),
               ),
               onPressed: () {
-                DatabaseService(Provider.of<User>(context, listen: false).uid)
-                    .deleteActivity(widget.editActivity);
+                BlocProvider.of<ActivitiesBloc>(context)
+                    .add(
+                  DeleteActivity(widget.editActivity),
+                );
                 Navigator.of(context).pop(ConfirmAction.ACCEPT);
               },
             ),
@@ -253,33 +254,28 @@ class _ActivityEditFormState extends State<ActivityEditForm> {
                                     // Validate returns true if the form is valid, otherwise false.
                                     if (_formKey.currentState.validate()) {
                                       if (widget.editActivity != null) {
-                                        DatabaseService(Provider.of<User>(
-                                                    context,
-                                                    listen: false)
-                                                .uid)
-                                            .editActivity(Activity(
-                                                documentUid: widget
-                                                    .editActivity.documentUid,
-                                                name: _textController.text,
-                                                icon: IconEnum
-                                                    .values[_currentIcon],
-                                                color: ColorEnum
-                                                    .values[_currentColor],
-                                                order:
-                                                    widget.editActivity.order));
+                                        BlocProvider.of<ActivitiesBloc>(context)
+                                            .add(
+                                          UpdateActivity(widget.editActivity
+                                              .copyWith(
+                                              name: _textController.text,
+                                              icon: IconEnum
+                                                  .values[_currentIcon],
+                                              color: ColorEnum
+                                                  .values[_currentColor],
+                                              order: widget
+                                                  .editActivity.order)),
+                                        );
                                       } else {
-                                        DatabaseService(Provider.of<User>(
-                                                    context,
-                                                    listen: false)
-                                                .uid)
-                                            .addActivity(Activity(
-                                                name: _textController.text,
-                                                icon: IconEnum
-                                                    .values[_currentIcon],
-                                                color: ColorEnum
-                                                    .values[_currentColor],
-                                                order:
-                                                    Random().nextInt(80000)));
+                                        BlocProvider.of<ActivitiesBloc>(context)
+                                            .add(
+                                          AddActivity(Activity(
+                                            _textController.text,
+                                            IconEnum.values[_currentIcon],
+                                            ColorEnum.values[_currentColor],
+                                            Random().nextInt(80000),
+                                          )),
+                                        );
                                       }
                                       Navigator.pop(context);
                                     }
