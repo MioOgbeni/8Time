@@ -1,4 +1,3 @@
-import 'package:eighttime/activities_repository.dart';
 import 'package:eighttime/blocs/activities_bloc/bloc.dart';
 import 'package:eighttime/blocs/authentication_bloc/bloc.dart';
 import 'package:eighttime/pages/login/login_screen.dart';
@@ -7,8 +6,8 @@ import 'package:eighttime/pages/main/qr_code/qr_code_screen.dart';
 import 'package:eighttime/pages/main/settings/settings_screen.dart';
 import 'package:eighttime/pages/main/timeline/timeline_screen.dart';
 import 'package:eighttime/pages/splash/splash_screen.dart';
+import 'package:eighttime/service_locator.dart';
 import 'package:eighttime/simple_bloc_delegate.dart';
-import 'package:eighttime/src/models/user/firebase_user_repository.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -27,25 +26,19 @@ bool isAuthenticated = false;
 void main() {
   WidgetsFlutterBinding.ensureInitialized();
   BlocSupervisor.delegate = SimpleBlocDelegate();
-  final FirebaseUserRepository firebaseUserRepository =
-  FirebaseUserRepository();
+  setupLocator();
   runApp(
     BlocProvider(
       create: (context) =>
-      AuthenticationBloc(firebaseUserRepository: firebaseUserRepository)
+      injector<AuthenticationBloc>()
         ..add(AppStarted()),
-      child: App(firebaseUserRepository: firebaseUserRepository),
+      child: App(),
     ),
   );
 }
 
 class App extends StatelessWidget {
-  final FirebaseUserRepository _firebaseUserRepository;
-
-  App({Key key, @required FirebaseUserRepository firebaseUserRepository})
-      : assert(firebaseUserRepository != null),
-        _firebaseUserRepository = firebaseUserRepository,
-        super(key: key);
+  App({Key key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -55,13 +48,15 @@ class App extends StatelessWidget {
     ]);
     return MultiBlocProvider(
         providers: [
-          BlocProvider<AuthenticationBloc>(
-            create: (context) {
-              return AuthenticationBloc(
-                firebaseUserRepository: FirebaseUserRepository(),
-              )
-                ..add(AppStarted());
-            },
+          BlocProvider(
+            create: (context) =>
+            injector<AuthenticationBloc>()
+              ..add(AppStarted()),
+          ),
+          BlocProvider(
+            create: (context) =>
+            injector<ActivitiesBloc>()
+              ..add(LoadActivities()),
           ),
         ],
         child: MaterialApp(
@@ -79,19 +74,10 @@ class App extends StatelessWidget {
                 return SplashScreen();
               }
               if (state is Unauthenticated) {
-                return LoginScreen(
-                    firebaseUserRepository: _firebaseUserRepository);
+                return LoginScreen();
               }
               if (state is Authenticated) {
-                return BlocProvider<ActivitiesBloc>(
-                    child: Home(),
-                    create: (context) {
-                      return ActivitiesBloc(
-                        activitiesRepository: FirebaseActivitiesRepository(
-                            userUid: state.user.uid),
-                      )
-                        ..add(LoadActivities());
-                    });
+                return Home();
               }
             },
           ),

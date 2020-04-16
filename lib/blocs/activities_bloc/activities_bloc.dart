@@ -3,15 +3,13 @@ import 'dart:async';
 import 'package:bloc/bloc.dart';
 import 'package:eighttime/activities_repository.dart';
 import 'package:eighttime/blocs/activities_bloc/bloc.dart';
-import 'package:meta/meta.dart';
+
+import '../../service_locator.dart';
 
 class ActivitiesBloc extends Bloc<ActivitiesEvent, ActivitiesState> {
-  final ActivitiesRepository _activitiesRepository;
   StreamSubscription _activitiesSubscription;
 
-  ActivitiesBloc({@required ActivitiesRepository activitiesRepository})
-      : assert(activitiesRepository != null),
-        _activitiesRepository = activitiesRepository;
+  ActivitiesBloc();
 
   @override
   ActivitiesState get initialState => ActivitiesLoading();
@@ -34,30 +32,34 @@ class ActivitiesBloc extends Bloc<ActivitiesEvent, ActivitiesState> {
   }
 
   Stream<ActivitiesState> _mapLoadActivitiesToState() async* {
+    var repository = injector<FirebaseActivitiesRepository>();
     _activitiesSubscription?.cancel();
-    _activitiesSubscription = _activitiesRepository.activities().listen(
+    _activitiesSubscription = repository.activities().listen(
           (activities) => add(ActivitiesUpdated(activities)),
-        );
+    );
   }
 
   Stream<ActivitiesState> _mapAddActivityToState(AddActivity event) async* {
-    _activitiesRepository.addNewActivity(event.activity);
+    var repository = injector<FirebaseActivitiesRepository>();
+    repository.addNewActivity(event.activity);
   }
 
   Stream<ActivitiesState> _mapUpdateActivityToState(
       UpdateActivity event) async* {
-    _activitiesRepository.updateActivity(event.activity);
+    var repository = injector<FirebaseActivitiesRepository>();
+    repository.updateActivity(event.activity);
   }
 
   Stream<ActivitiesState> _mapUpdateActivitiesToState(
       UpdateActivities event) async* {
-    event.activities
-        .forEach((item) => _activitiesRepository.updateActivity(item));
+    var repository = injector<FirebaseActivitiesRepository>();
+    event.activities.forEach((item) => repository.updateActivity(item));
   }
 
   Stream<ActivitiesState> _mapDeleteActivityToState(
       DeleteActivity event) async* {
-    _activitiesRepository.deleteActivity(event.activity);
+    var repository = injector<FirebaseActivitiesRepository>();
+    repository.deleteActivity(event.activity);
   }
 
   Stream<ActivitiesState> _mapActivitiesUpdateToState(
