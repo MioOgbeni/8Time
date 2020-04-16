@@ -10,29 +10,22 @@ class SplashScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
         body: BlocProvider(
-          create: (BuildContext context) => SplashScreenBloc(),
-          child: Container(
-            height: MediaQuery
-                .of(context)
-                .size
-                .height,
-            width: MediaQuery
-                .of(context)
-                .size
-                .width,
-            color: Colors.orange,
-            child: Center(
-              child: BlocConsumer<SplashScreenBloc, SplashScreenState>(
-                  listenWhen: (_, state) => state is Loaded,
-                  listener: (context, state) {
-                    return BlocProvider.of<AuthenticationBloc>(context)
-                        .add(AppStarted());
+      create: (BuildContext context) => SplashScreenBloc(),
+      child: Container(
+        height: double.infinity,
+        width: double.infinity,
+        color: Colors.orange,
+        child: Center(
+          child: BlocConsumer<SplashScreenBloc, SplashScreenState>(
+              listenWhen: (_, state) => state is Loaded,
+              listener: (context, state) {
+                return BlocProvider.of<AuthenticationBloc>(context)
+                    .add(AppStarted());
               },
-                  buildWhen: (_, state) =>
-                  (state is Initial) || (state is Loading),
-                  builder: (context, state) => SplashScreenWidget()),
-            ),
-          ),
-        ));
+              buildWhen: (_, state) => (state is Initial) || (state is Loading),
+              builder: (context, state) => SplashScreenWidget()),
+        ),
+      ),
+    ));
   }
 }

@@ -10,9 +10,9 @@ class SplashScreenWidget extends StatefulWidget {
 
 class _SplashScreenWidgetState extends State<SplashScreenWidget> {
   @override
-  void initState() {
-    super.initState();
+  void didChangeDependencies() {
     this._dispatchEvent(context);
+    super.didChangeDependencies();
   }
 
   @override
@@ -21,9 +21,7 @@ class _SplashScreenWidgetState extends State<SplashScreenWidget> {
         body: Stack(
       fit: StackFit.expand,
       children: <Widget>[
-        Container(
-          decoration: BoxDecoration(color: Colors.white),
-        ),
+        Container(decoration: BoxDecoration(color: Colors.white)),
         Column(
           mainAxisAlignment: MainAxisAlignment.start,
           children: <Widget>[
