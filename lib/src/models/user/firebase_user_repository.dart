@@ -2,10 +2,11 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:eighttime/activities_repository.dart';
 import 'package:eighttime/service_locator.dart';
 import 'package:eighttime/src/models/user/user.dart';
+import 'package:eighttime/src/models/user/user_repository.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 
-class FirebaseUserRepository {
+class FirebaseUserRepository extends UserRepository {
   CollectionReference usersCollection = Firestore.instance.collection('users');
   final FirebaseAuth _firebaseAuth;
   final GoogleSignIn _googleSignIn;
@@ -14,6 +15,7 @@ class FirebaseUserRepository {
       : _firebaseAuth = firebaseAuth ?? FirebaseAuth.instance,
         _googleSignIn = googleSignIn ?? GoogleSignIn();
 
+  @override
   Future<FirebaseUser> signInWithGoogle() async {
     final GoogleSignInAccount googleUser = await _googleSignIn.signIn();
     final GoogleSignInAuthentication googleAuth =
@@ -42,6 +44,7 @@ class FirebaseUserRepository {
     return _firebaseAuth.currentUser();
   }
 
+  @override
   Future<void> signOut() async {
     return Future.wait([
       _firebaseAuth.signOut(),
@@ -49,11 +52,13 @@ class FirebaseUserRepository {
     ]);
   }
 
+  @override
   Future<bool> isSignedIn() async {
     final currentUser = await _firebaseAuth.currentUser();
     return currentUser != null;
   }
 
+  @override
   Future<User> getUser() async {
     FirebaseUser firebaseUser = await _firebaseAuth.currentUser();
     return (User(
@@ -63,6 +68,7 @@ class FirebaseUserRepository {
         photoUrl: firebaseUser.photoUrl.replaceAll("=s96-c", "=s1080-c")));
   }
 
+  @override
   Future<String> getUserId() async {
     return (await _firebaseAuth.currentUser()).uid;
   }
