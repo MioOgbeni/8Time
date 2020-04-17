@@ -27,7 +27,13 @@ void main() {
   WidgetsFlutterBinding.ensureInitialized();
   BlocSupervisor.delegate = SimpleBlocDelegate();
   setupLocator();
-  runApp(App());
+  runApp(
+    BlocProvider(
+      create: (context) =>
+          injector.get<AuthenticationBloc>()..add(AppStarted()),
+      child: App(),
+    ),
+  );
 }
 
 class App extends StatelessWidget {
@@ -39,19 +45,9 @@ class App extends StatelessWidget {
       DeviceOrientation.portraitUp,
       DeviceOrientation.portraitDown,
     ]);
-    return MultiBlocProvider(
-        providers: [
-          BlocProvider(
-            create: (context) =>
-            injector.get<AuthenticationBloc>()
-              ..add(AppStarted()),
-          ),
-          BlocProvider(
-            create: (context) =>
-            injector.get<ActivitiesBloc>()
-              ..add(LoadActivities()),
-          ),
-        ],
+    return BlocProvider(
+        create: (context) =>
+            injector.get<ActivitiesBloc>()..add(LoadActivities()),
         child: MaterialApp(
           theme: ThemeData(
               primaryColor: primaryColor,
@@ -61,7 +57,6 @@ class App extends StatelessWidget {
           debugShowCheckedModeBanner: false,
           routes: routes,
           home: BlocBuilder<AuthenticationBloc, AuthenticationState>(
-            // ignore: missing_return
             builder: (context, state) {
               if (state is Uninitialized) {
                 return SplashScreen();
@@ -71,6 +66,8 @@ class App extends StatelessWidget {
               }
               if (state is Authenticated) {
                 return Home();
+              } else {
+                return Container(child: Text("Not supported state: $state"));
               }
             },
           ),

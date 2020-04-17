@@ -3,13 +3,17 @@ import 'dart:async';
 import 'package:bloc/bloc.dart';
 import 'package:eighttime/activities_repository.dart';
 import 'package:eighttime/blocs/authentication_bloc/bloc.dart';
-import 'package:eighttime/service_locator.dart';
 import 'package:eighttime/src/models/user/firebase_user_repository.dart';
+import 'package:flutter/cupertino.dart';
 
 class AuthenticationBloc
     extends Bloc<AuthenticationEvent, AuthenticationState> {
+  final FirebaseActivitiesRepository firebaseActivitiesRepository;
+  final FirebaseUserRepository firebaseUserRepository;
 
-  AuthenticationBloc();
+  AuthenticationBloc(
+      {@required this.firebaseActivitiesRepository,
+      @required this.firebaseUserRepository});
 
   @override
   AuthenticationState get initialState => Uninitialized();
@@ -28,15 +32,13 @@ class AuthenticationBloc
   }
 
   Stream<AuthenticationState> _mapAppStartedToState() async* {
-    var repository = injector.get<FirebaseUserRepository>();
     try {
-      final isSignedIn = await repository.isSignedIn();
+      final isSignedIn = await firebaseUserRepository.isSignedIn();
       if (!isSignedIn) {
         yield Unauthenticated();
       }
-      final user = await repository.getUser();
-      var activitiesRepository = injector.get<FirebaseActivitiesRepository>();
-      await activitiesRepository.setCollectionReference();
+      final user = await firebaseUserRepository.getUser();
+      await firebaseActivitiesRepository.setCollectionReference();
 
       yield Authenticated(user);
     } catch (_) {
@@ -45,13 +47,12 @@ class AuthenticationBloc
   }
 
   Stream<AuthenticationState> _mapLoggedInToState() async* {
-    var repository = injector.get<FirebaseUserRepository>();
-    yield Authenticated(await repository.getUser());
+    final user = await firebaseUserRepository.getUser();
+    yield Authenticated(user);
   }
 
   Stream<AuthenticationState> _mapLoggedOutToState() async* {
-    var repository = injector.get<FirebaseUserRepository>();
+    await firebaseUserRepository.signOut();
     yield Unauthenticated();
-    repository.signOut();
   }
 }

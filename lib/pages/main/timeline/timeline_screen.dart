@@ -15,8 +15,8 @@ class _TimelineScreenState extends State<TimelineScreen> {
 
   @override
   void initState() {
-    _calendarController = CalendarController();
     super.initState();
+    _calendarController = CalendarController();
   }
 
   @override
@@ -33,7 +33,7 @@ class _TimelineScreenState extends State<TimelineScreen> {
             Text(
               "Timeline",
               style:
-              TextStyle(color: Colors.black, fontWeight: FontWeight.bold),
+                  TextStyle(color: Colors.black, fontWeight: FontWeight.bold),
             ),
           ],
         ),
@@ -43,7 +43,6 @@ class _TimelineScreenState extends State<TimelineScreen> {
           mainAxisAlignment: MainAxisAlignment.start,
           children: <Widget>[
             TableCalendar(
-
               calendarController: _calendarController,
               initialCalendarFormat: CalendarFormat.week,
               headerVisible: false,
@@ -52,19 +51,13 @@ class _TimelineScreenState extends State<TimelineScreen> {
               daysOfWeekStyle: DaysOfWeekStyle(
                 weekendStyle: TextStyle().copyWith(color: primaryColor),
               ),
-              builders: CalendarBuilders(
-
-              ),
+              builders: CalendarBuilders(),
               calendarStyle: CalendarStyle(
                   weekendStyle: TextStyle().copyWith(color: primaryColor),
                   todayColor: primaryColor.withOpacity(0.2),
-                  todayStyle: TextStyle(
-                      color: Colors.black
-                  ),
+                  todayStyle: TextStyle(color: Colors.black),
                   selectedColor: primaryColor,
-                  outsideDaysVisible: false
-
-              ),
+                  outsideDaysVisible: false),
             )
           ],
         ),
