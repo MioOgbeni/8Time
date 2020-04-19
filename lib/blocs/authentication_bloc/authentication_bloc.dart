@@ -28,6 +28,8 @@ class AuthenticationBloc
       yield* _mapLoggedInToState();
     } else if (event is LoggedOut) {
       yield* _mapLoggedOutToState();
+    } else if (event is UpdateUser) {
+      yield* _mapUpdateUserToState(event);
     }
   }
 
@@ -37,7 +39,8 @@ class AuthenticationBloc
       if (!isSignedIn) {
         yield Unauthenticated();
       }
-      final user = await firebaseUserRepository.getUser();
+      final user = await firebaseUserRepository.getUser(
+          await firebaseUserRepository.getUserId());
       await firebaseActivitiesRepository.setCollectionReference();
 
       yield Authenticated(user);
@@ -47,12 +50,20 @@ class AuthenticationBloc
   }
 
   Stream<AuthenticationState> _mapLoggedInToState() async* {
-    final user = await firebaseUserRepository.getUser();
+    final user = await firebaseUserRepository.getUser(
+        await firebaseUserRepository.getUserId());
     yield Authenticated(user);
   }
 
   Stream<AuthenticationState> _mapLoggedOutToState() async* {
     await firebaseUserRepository.signOut();
     yield Unauthenticated();
+  }
+
+  Stream<AuthenticationState> _mapUpdateUserToState(UpdateUser event) async* {
+    await firebaseUserRepository.updateUser(event.user);
+    final user = await firebaseUserRepository.getUser(
+        await firebaseUserRepository.getUserId());
+    yield Authenticated(user);
   }
 }

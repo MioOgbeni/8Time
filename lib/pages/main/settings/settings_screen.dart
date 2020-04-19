@@ -1,5 +1,6 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:eighttime/blocs/authentication_bloc/bloc.dart';
+import 'package:eighttime/main.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -14,22 +15,22 @@ class SettingsScreen extends StatefulWidget {
 class _SettingsScreenState extends State<SettingsScreen> {
   @override
   Widget build(BuildContext context) {
-    return Container(
-      color: Colors.white,
-      child: ListView(
-        shrinkWrap: false,
-        children: <Widget>[
-          Container(
-            height: 230,
-            child: Card(
-              color: Colors.white,
-              elevation: 3.0,
-              shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(0)),
-              margin: EdgeInsets.only(bottom: 10),
-              child: BlocBuilder<AuthenticationBloc, AuthenticationState>(
-                  builder: (context, state) {
-                return Column(
+    return BlocBuilder<AuthenticationBloc, AuthenticationState>(
+        builder: (context, state) {
+          return Container(
+            color: Colors.white,
+            child: ListView(
+              shrinkWrap: false,
+              children: <Widget>[
+                Container(
+                  height: 230,
+                  child: Card(
+                    color: Colors.white,
+                    elevation: 3.0,
+                    shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(0)),
+                    margin: EdgeInsets.only(bottom: 10),
+                    child: Column(
                   mainAxisAlignment: MainAxisAlignment.center,
                   crossAxisAlignment: CrossAxisAlignment.center,
                   children: <Widget>[
@@ -109,72 +110,31 @@ class _SettingsScreenState extends State<SettingsScreen> {
                       ),
                     )
                   ],
-                );
-              }),
+                    ),
+                  ),
+                ),
+                SwitchListTile(
+                  title: Text("Use fingerprint auth"),
+                  activeColor: primaryColor,
+                  value: state is Authenticated
+                      ? state.user.useFingerprint
+                      : true,
+                  subtitle: Text("Will be reseted by manual logout"),
+                  onChanged: (switchState) {
+                    state is Authenticated
+                        ? BlocProvider.of<AuthenticationBloc>(context).add(
+                        UpdateUser(
+                            state.user.copyWith(useFingerprint: switchState)))
+                        : null;
+                  },
+                  //height: 50,
+                  //margin: EdgeInsets.only(bottom: 10),
+                  //color: Colors.amber[500],
+                  //child: const Center(child: Text('Entry B')),
+                ),
+              ],
             ),
-          ),
-          Container(
-            height: 50,
-            margin: EdgeInsets.only(bottom: 10),
-            color: Colors.amber[500],
-            child: const Center(child: Text('Entry B')),
-          ),
-          Container(
-            height: 50,
-            margin: EdgeInsets.only(bottom: 10),
-            color: Colors.amber[500],
-            child: const Center(child: Text('Entry B')),
-          ),
-          Container(
-            height: 50,
-            margin: EdgeInsets.only(bottom: 10),
-            color: Colors.amber[500],
-            child: const Center(child: Text('Entry B')),
-          ),
-          Container(
-            height: 50,
-            margin: EdgeInsets.only(bottom: 10),
-            color: Colors.amber[500],
-            child: const Center(child: Text('Entry B')),
-          ),
-          Container(
-            height: 50,
-            margin: EdgeInsets.only(bottom: 10),
-            color: Colors.amber[500],
-            child: const Center(child: Text('Entry B')),
-          ),
-          Container(
-            height: 50,
-            margin: EdgeInsets.only(bottom: 10),
-            color: Colors.amber[500],
-            child: const Center(child: Text('Entry B')),
-          ),
-          Container(
-            height: 50,
-            margin: EdgeInsets.only(bottom: 10),
-            color: Colors.amber[500],
-            child: const Center(child: Text('Entry B')),
-          ),
-          Container(
-            height: 50,
-            margin: EdgeInsets.only(bottom: 10),
-            color: Colors.amber[500],
-            child: const Center(child: Text('Entry B')),
-          ),
-          Container(
-            height: 50,
-            margin: EdgeInsets.only(bottom: 10),
-            color: Colors.amber[500],
-            child: const Center(child: Text('Entry B')),
-          ),
-          Container(
-            height: 50,
-            margin: EdgeInsets.only(bottom: 10),
-            color: Colors.amber[500],
-            child: const Center(child: Text('Entry B')),
-          ),
-        ],
-      ),
-    );
+          );
+        });
   }
 }

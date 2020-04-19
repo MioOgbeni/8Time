@@ -8,7 +8,11 @@ abstract class UserRepository {
 
   Future<bool> isSignedIn();
 
-  Future<User> getUser();
+  Future<User> getUser(String uid);
 
   Future<String> getUserId();
+
+  Future<void> addNewUser(User user);
+
+  Future<void> updateUser(User user);
 }

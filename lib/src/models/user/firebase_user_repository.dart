@@ -1,6 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:eighttime/activities_repository.dart';
 import 'package:eighttime/service_locator.dart';
+import 'package:eighttime/src/entities/user_entity.dart';
 import 'package:eighttime/src/models/user/user.dart';
 import 'package:eighttime/src/models/user/user_repository.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -25,6 +26,11 @@ class FirebaseUserRepository extends UserRepository {
       idToken: googleAuth.idToken,
     );
     await _firebaseAuth.signInWithCredential(credential);
+
+    FirebaseUser currentUser = await _firebaseAuth.currentUser();
+    addNewUser(User(currentUser.displayName, currentUser.email,
+        currentUser.photoUrl.replaceAll("=s96-c", "=s1080-c"),
+        useFingerprint: true, documentUid: currentUser.uid));
 
     var repository = injector.get<FirebaseActivitiesRepository>();
     await repository.setCollectionReference();
@@ -59,17 +65,26 @@ class FirebaseUserRepository extends UserRepository {
   }
 
   @override
-  Future<User> getUser() async {
-    FirebaseUser firebaseUser = await _firebaseAuth.currentUser();
-    return (User(
-        uid: firebaseUser.uid,
-        name: firebaseUser.displayName,
-        mail: firebaseUser.email,
-        photoUrl: firebaseUser.photoUrl.replaceAll("=s96-c", "=s1080-c")));
+  Future<User> getUser(String uid) async {
+    return User.fromEntity(
+        UserEntity.fromSnapshot(await usersCollection.document(uid).get()));
   }
 
   @override
   Future<String> getUserId() async {
     return (await _firebaseAuth.currentUser()).uid;
+  }
+
+  @override
+  Future<void> addNewUser(User user) {
+    return usersCollection.document(user.documentUid).setData(
+        user.toEntity().toDocument());
+  }
+
+  @override
+  Future<void> updateUser(User update) {
+    return usersCollection
+        .document(update.documentUid)
+        .updateData(update.toEntity().toDocument());
   }
 }
