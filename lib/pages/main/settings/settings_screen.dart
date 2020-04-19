@@ -6,8 +6,12 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
+
 class SettingsScreen extends StatefulWidget {
-  SettingsScreen({Key key}) : super(key: key);
+  final bool canCheckBiometrics;
+
+  SettingsScreen({Key key, this.canCheckBiometrics})
+      : super(key: key,);
 
   @override
   _SettingsScreenState createState() => new _SettingsScreenState();
@@ -123,19 +127,23 @@ class _SettingsScreenState extends State<SettingsScreen> {
                   ),
                 ),
                 SwitchListTile(
+                  secondary: Icon(Icons.fingerprint, size: 40,),
                   title: Text("Use fingerprint auth"),
                   activeColor: primaryColor,
-                  value: _fingerprintSwitchState ?? (state is Authenticated
-                      ? state.user.useFingerprint
-                      : null),
-                  subtitle: Text("Will be reseted by manual logout"),
-                  onChanged: (switchState) {
+                  value: widget.canCheckBiometrics ? (_fingerprintSwitchState ??
+                      (state is Authenticated
+                          ? state.user.useFingerprint
+                          : null)) : false,
+                  subtitle: widget.canCheckBiometrics ? Text(
+                      "Will be reseted by logout") : Text(
+                      "Not supported by your device"),
+                  onChanged: widget.canCheckBiometrics ? ((switchState) {
                     if (state is Authenticated) {
                       setState(() {
                         changeFingerprintSwitchState(state.user, switchState);
                       });
                     }
-                  },
+                  }) : null,
                   //height: 50,
                   //margin: EdgeInsets.only(bottom: 10),
                   //color: Colors.amber[500],

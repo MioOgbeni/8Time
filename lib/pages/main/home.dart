@@ -5,7 +5,9 @@ import 'package:eighttime/pages/main/sliding_up_panel/sliding_up_panel.dart';
 import 'package:eighttime/pages/main/timeline/timeline_screen.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:local_auth/local_auth.dart';
 import 'package:sliding_up_panel/sliding_up_panel.dart';
 
 class Home extends StatefulWidget {
@@ -17,6 +19,8 @@ class Home extends StatefulWidget {
 }
 
 class _HomeState extends State<Home> {
+  final LocalAuthentication auth = LocalAuthentication();
+  bool _canCheckBiometrics;
   int _currentIndex;
   bool _quickActivitiesPressed;
   PageController _pageController;
@@ -30,6 +34,21 @@ class _HomeState extends State<Home> {
     _quickActivitiesPressed = false;
     _pageController = PageController();
     _quickActivitiesController = PanelController();
+    _checkBiometrics();
+  }
+
+  Future<void> _checkBiometrics() async {
+    bool canCheckBiometrics;
+    try {
+      canCheckBiometrics = await auth.canCheckBiometrics;
+    } on PlatformException catch (e) {
+      print(e);
+    }
+    if (!mounted) return;
+
+    setState(() {
+      _canCheckBiometrics = canCheckBiometrics;
+    });
   }
 
   void closeQuickActivities([bool quickButton = false]) {
@@ -64,7 +83,7 @@ class _HomeState extends State<Home> {
                 DashboardScreen(),
                 TimelineScreen(),
                 QrCodeScreen(),
-                SettingsScreen(),
+                SettingsScreen(canCheckBiometrics: _canCheckBiometrics),
               ],
             ),
             MySlidingUpPanel(

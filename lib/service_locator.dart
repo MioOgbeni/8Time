@@ -1,5 +1,6 @@
 import 'package:eighttime/blocs/activities_bloc/bloc.dart';
 import 'package:eighttime/blocs/authentication_bloc/bloc.dart';
+import 'package:eighttime/blocs/fingerprint_bloc/bloc.dart';
 import 'package:eighttime/blocs/login_bloc/bloc.dart';
 import 'package:eighttime/blocs/splash_screen_bloc/bloc.dart';
 import 'package:eighttime/src/models/activity/firebase_activities_repository.dart';
@@ -21,6 +22,7 @@ void setupLocator() {
       () => LoginBloc(firebaseUserRepository: injector()));
   injector.registerFactory<ActivitiesBloc>(
       () => ActivitiesBloc(firebaseActivitiesRepository: injector()));
+  injector.registerFactory<FingerprintBloc>(() => FingerprintBloc());
 
   injector.registerLazySingleton<FirebaseUserRepository>(
       () => FirebaseUserRepository());
