@@ -39,8 +39,7 @@ class AuthenticationBloc
       if (!isSignedIn) {
         yield Unauthenticated();
       }
-      final user = await firebaseUserRepository.getUser(
-          await firebaseUserRepository.getUserId());
+      final user = await firebaseUserRepository.getUser();
       await firebaseActivitiesRepository.setCollectionReference();
 
       yield Authenticated(user);
@@ -50,8 +49,7 @@ class AuthenticationBloc
   }
 
   Stream<AuthenticationState> _mapLoggedInToState() async* {
-    final user = await firebaseUserRepository.getUser(
-        await firebaseUserRepository.getUserId());
+    final user = await firebaseUserRepository.getUser();
     yield Authenticated(user);
   }
 
@@ -62,8 +60,7 @@ class AuthenticationBloc
 
   Stream<AuthenticationState> _mapUpdateUserToState(UpdateUser event) async* {
     await firebaseUserRepository.updateUser(event.user);
-    final user = await firebaseUserRepository.getUser(
-        await firebaseUserRepository.getUserId());
+    final user = await firebaseUserRepository.getUser();
     yield Authenticated(user);
   }
 }

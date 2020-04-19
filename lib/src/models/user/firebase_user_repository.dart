@@ -65,9 +65,11 @@ class FirebaseUserRepository extends UserRepository {
   }
 
   @override
-  Future<User> getUser(String uid) async {
+  Future<User> getUser() async {
+    final currentUser = await _firebaseAuth.currentUser();
     return User.fromEntity(
-        UserEntity.fromSnapshot(await usersCollection.document(uid).get()));
+        UserEntity.fromSnapshot(
+            await usersCollection.document(currentUser.uid).get()));
   }
 
   @override

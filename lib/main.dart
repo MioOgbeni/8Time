@@ -20,6 +20,7 @@ var routes = <String, WidgetBuilder>{
 };
 
 const primaryColor = Color.fromRGBO(10, 154, 28, 1.0);
+const accentColor = Color.fromRGBO(10, 154, 28, 0.8);
 const errorColor = Color.fromRGBO(219, 64, 64, 1.0);
 bool isAuthenticated = false;
 
@@ -51,6 +52,7 @@ class App extends StatelessWidget {
         child: MaterialApp(
           theme: ThemeData(
               primaryColor: primaryColor,
+              accentColor: primaryColor,
               buttonColor: primaryColor,
               errorColor: errorColor,
               fontFamily: 'Segoe UI'),
@@ -65,7 +67,11 @@ class App extends StatelessWidget {
                 return LoginScreen();
               }
               if (state is Authenticated) {
-                return Home();
+                if (state.user.useFingerprint) {
+                  return Home();
+                } else {
+                  return Home();
+                }
               } else {
                 return Container(child: Text("Not supported state: $state"));
               }
