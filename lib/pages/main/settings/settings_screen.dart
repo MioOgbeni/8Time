@@ -114,7 +114,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
                               ),
                             ),
                             child: Text(
-                              "Sign out",
+                              "Logout",
                               style: TextStyle(
                                 color: Colors.black,
                                 fontSize: 12.0,
@@ -129,6 +129,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
                 SwitchListTile(
                   secondary: Icon(Icons.fingerprint, size: 40,),
                   title: Text("Use fingerprint auth"),
+                  contentPadding: EdgeInsets.symmetric(horizontal: 7),
                   activeColor: primaryColor,
                   value: widget.canCheckBiometrics ? (_fingerprintSwitchState ??
                       (state is Authenticated

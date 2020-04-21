@@ -13,6 +13,7 @@ class FingerprintForm extends StatefulWidget {
 class _FingerprintFormState extends State<FingerprintForm> {
   @override
   void initState() {
+    BlocProvider.of<FingerprintBloc>(context).add(FpApproved());
     super.initState();
   }
 
