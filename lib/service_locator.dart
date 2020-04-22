@@ -5,6 +5,7 @@ import 'package:eighttime/blocs/login_bloc/bloc.dart';
 import 'package:eighttime/blocs/splash_screen_bloc/bloc.dart';
 import 'package:eighttime/src/models/activity/firebase_activities_repository.dart';
 import 'package:eighttime/src/models/user/firebase_user_repository.dart';
+import 'package:eighttime/src/models/work_event/firebase_work_event_repository.dart';
 import 'package:eighttime/user_repository.dart';
 import 'package:get_it/get_it.dart';
 
@@ -28,4 +29,6 @@ void setupLocator() {
       () => FirebaseUserRepository());
   injector.registerLazySingleton<FirebaseActivitiesRepository>(
       () => FirebaseActivitiesRepository());
+  injector.registerLazySingleton<FirebaseWorkEventRepository>(
+          () => FirebaseWorkEventRepository());
 }

@@ -1,3 +1,6 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:eighttime/activities_repository.dart';
+import 'package:eighttime/service_locator.dart';
 import 'package:eighttime/src/entities/entities.dart';
 import 'package:flutter/material.dart';
 
@@ -7,26 +10,28 @@ class WorkEvent {
   final DateTime fromTime;
   final DateTime toTime;
   final String description;
-  final String activityUid;
+  final GeoPoint geoPoint;
+  final Activity activity;
   final String documentUid;
 
-  WorkEvent(
-      this.date, this.fromTime, this.toTime, this.description, this.activityUid,
+  WorkEvent(this.date, this.fromTime, this.toTime, this.description,
+      this.geoPoint, this.activity,
       {this.documentUid});
 
-  WorkEvent copyWith(
-      {DateTime date,
-      DateTime fromTime,
-      DateTime toTime,
-      String description,
-      String activityUid,
-      String documentUid}) {
+  WorkEvent copyWith({DateTime date,
+    DateTime fromTime,
+    DateTime toTime,
+    String description,
+    GeoPoint geoPoint,
+    Activity activity,
+    String documentUid}) {
     return WorkEvent(
       date ?? this.date,
       fromTime ?? this.fromTime,
       toTime ?? this.toTime,
       description ?? this.description,
-      activityUid ?? this.activityUid,
+      geoPoint ?? this.geoPoint,
+      activity ?? this.activity,
       documentUid: documentUid ?? this.documentUid,
     );
   }
@@ -37,38 +42,49 @@ class WorkEvent {
       fromTime.hashCode ^
       toTime.hashCode ^
       description.hashCode ^
-      activityUid.hashCode ^
+      geoPoint.hashCode ^
+      activity.hashCode ^
       documentUid.hashCode;
 
   @override
   bool operator ==(Object other) =>
       identical(this, other) ||
-      other is WorkEvent &&
-          runtimeType == other.runtimeType &&
-          date == other.date &&
-          fromTime == other.fromTime &&
-          toTime == other.toTime &&
-          description == other.description &&
-          activityUid == other.activityUid &&
-          documentUid == other.documentUid;
+          other is WorkEvent &&
+              runtimeType == other.runtimeType &&
+              date == other.date &&
+              fromTime == other.fromTime &&
+              toTime == other.toTime &&
+              description == other.description &&
+              geoPoint == other.geoPoint &&
+              activity == other.activity &&
+              documentUid == other.documentUid;
 
   @override
   String toString() {
-    return 'WorkEvent { date: $date, fromTime: $fromTime, toTime: $toTime, description: $description, activityUid: $activityUid, documentUid: $documentUid }';
+    return 'WorkEvent { date: $date, fromTime: $fromTime, toTime: $toTime, description: $description, geoPoint: $geoPoint, activity: $activity, documentUid: $documentUid }';
   }
 
   WorkEventEntity toEntity() {
     return WorkEventEntity(
-        date, fromTime, toTime, description, activityUid, documentUid);
+        date,
+        fromTime,
+        toTime,
+        description,
+        geoPoint,
+        activity.documentUid,
+        documentUid);
   }
 
-  static WorkEvent fromEntity(WorkEventEntity entity) {
+  static Future<WorkEvent> fromEntity(WorkEventEntity entity) async {
     return WorkEvent(
       entity.date,
       entity.fromTime,
       entity.toTime,
       entity.description,
-      entity.activityUid,
+      entity.geoPoint,
+      await injector
+          .get<FirebaseActivitiesRepository>()
+          .getActivity(entity.activityUid),
       documentUid: entity.documentUid,
     );
   }

@@ -6,10 +6,12 @@ class WorkEventEntity extends Equatable {
   final DateTime fromTime;
   final DateTime toTime;
   final String description;
+  final GeoPoint geoPoint;
   final String activityUid;
   final String documentUid;
 
   const WorkEventEntity(this.date, this.fromTime, this.toTime, this.description,
+      this.geoPoint,
       this.activityUid, this.documentUid);
 
   Map<String, Object> toJson() {
@@ -18,6 +20,7 @@ class WorkEventEntity extends Equatable {
       "timeFrom": fromTime,
       "timeTo": toTime,
       "description": description,
+      "geoPoint": geoPoint,
       "activityUid": activityUid,
       "documentUid": documentUid,
     };
@@ -25,11 +28,11 @@ class WorkEventEntity extends Equatable {
 
   @override
   List<Object> get props =>
-      [date, fromTime, toTime, description, activityUid, documentUid];
+      [date, fromTime, toTime, description, geoPoint, activityUid, documentUid];
 
   @override
   String toString() {
-    return 'WorkEventEntity { date: $date, timeFrom: $fromTime, timeTo: $toTime, description: $description, activityUid: $activityUid, documentUid: $documentUid }';
+    return 'WorkEventEntity { date: $date, timeFrom: $fromTime, timeTo: $toTime, description: $description, geoPoint: $geoPoint, activityUid: $activityUid, documentUid: $documentUid }';
   }
 
   static WorkEventEntity fromJson(Map<String, Object> json) {
@@ -38,6 +41,7 @@ class WorkEventEntity extends Equatable {
       json["timeFrom"] as DateTime,
       json["timeTo"] as DateTime,
       json["description"] as String,
+      json["geoPoint"] as GeoPoint,
       json["activityUid"] as String,
       json["documentUid"] as String,
     );
@@ -49,6 +53,7 @@ class WorkEventEntity extends Equatable {
       snap.data['timeFrom'],
       snap.data['timeTo'],
       snap.data['description'],
+      snap.data['geoPoint'],
       snap.data['activityUid'],
       snap.documentID,
     );
@@ -60,6 +65,7 @@ class WorkEventEntity extends Equatable {
       "timeFrom": fromTime,
       "timeTo": toTime,
       "description": description,
+      "geoPoint": geoPoint,
       "activityUid": activityUid,
       "documentUid": documentUid,
     };

@@ -11,5 +11,7 @@ abstract class ActivitiesRepository {
 
   Stream<List<Activity>> activities();
 
+  Future<Activity> getActivity(String activityUid);
+
   Future<void> updateActivity(Activity activity);
 }

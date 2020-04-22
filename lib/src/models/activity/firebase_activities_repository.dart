@@ -46,6 +46,12 @@ class FirebaseActivitiesRepository implements ActivitiesRepository {
   }
 
   @override
+  Future<Activity> getActivity(String activityUid) async {
+    DocumentSnapshot doc = await activityCollection.document(activityUid).get();
+    return Activity.fromEntity(ActivityEntity.fromSnapshot(doc));
+  }
+
+  @override
   Future<void> updateActivity(Activity update) {
     return activityCollection
         .document(update.documentUid)
