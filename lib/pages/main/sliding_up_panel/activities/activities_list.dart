@@ -52,6 +52,7 @@ class _ActivitiesListState extends State<ActivitiesList> {
               Card(
                 key: ValueKey(item),
                 child: ListTile(
+                    key: ValueKey(item),
                     onTap: () {},
                     enabled: true,
                     contentPadding: EdgeInsets.only(left: 10.0),

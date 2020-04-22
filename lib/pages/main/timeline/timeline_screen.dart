@@ -1,4 +1,7 @@
+import 'dart:math';
+
 import 'package:eighttime/main.dart';
+import 'package:eighttime/pages/main/timeline/timeline.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:table_calendar/table_calendar.dart';
@@ -36,7 +39,6 @@ class _TimelineScreenState extends State<TimelineScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Colors.white,
       body: Center(
         child: Column(
           mainAxisAlignment: MainAxisAlignment.start,
@@ -97,13 +99,67 @@ class _TimelineScreenState extends State<TimelineScreen> {
                       .copyWith(color: primaryColor.withOpacity(0.26))),
             ),
             Expanded(
-              child: Container(
-                color: Colors.red,
+              child: Timeline(
+                  children: getTileWidgets(10),
+                  lineColor: Colors.black12,
+                  strokeWidth: 5,
+                  strokeCap: StrokeCap.round,
+                  primary: true,
+                  indicatorSize: 35,
+                  padding: EdgeInsets.symmetric(horizontal: 15, vertical: 10),
+                  indicators: getIndicatorWidgets(10)
               ),
             )
           ],
         ),
       ),
     );
+  }
+
+  List<Widget> getIndicatorWidgets(int length) {
+    final List<IconData> iconData = <IconData>[
+      Icons.play_arrow,
+      Icons.stop,
+      Icons.pause,
+      Icons.work,
+      Icons.memory,
+      Icons.exit_to_app,
+      Icons.directions_car,
+      Icons.free_breakfast,
+      Icons.developer_mode
+    ];
+    final List<Color> colorData = <Color>[
+      errorColor,
+      primaryColor,
+      Colors.blue,
+      Colors.yellow,
+      Colors.orange,
+      Colors.purple
+    ];
+    final Random r = Random();
+
+    List<Widget> list = new List<Widget>();
+    for (var i = 0; i < length; i++) {
+      list.add(Icon(iconData[r.nextInt(iconData.length)], size: 22,
+          color: colorData[r.nextInt(colorData.length)]));
+    }
+    return list;
+  }
+
+  List<Widget> getTileWidgets(int length) {
+    List<Widget> list = new List<Widget>();
+    for (var i = 0; i < length; i++) {
+      list.add(Card(
+        elevation: 2,
+        color: Colors.white,
+        child: Container(
+          height: 100,
+          width: double.infinity,
+          child: Text("Testing card"),
+        ),
+        margin: EdgeInsets.only(left: 10),
+      ));
+    }
+    return list;
   }
 }

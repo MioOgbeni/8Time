@@ -46,27 +46,20 @@ class _MySlidingUpPanelState extends State<MySlidingUpPanel> {
               ],
             ),
             actions: <Widget>[
-              Material(
-                child: InkWell(
-                    onTap: () {
-                      Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                            builder: (context) => ActivityEditForm()),
-                      );
-                    },
-                    child: Container(
-                      width: 55,
-                      child: Icon(
-                        Icons.add,
-                        color: Colors.black,
-                      ),
-                    )),
-              )
+              IconButton(
+                padding: EdgeInsets.only(right: 7),
+                icon: Icon(Icons.add, color: Colors.black),
+                onPressed: () {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                        builder: (context) => ActivityEditForm()),
+                  );
+                },
+              ),
             ],
           ),
           body: Container(
-            color: Colors.white,
             child: BlocBuilder<ActivitiesBloc, ActivitiesState>(
               // ignore: missing_return
               builder: (context, state) {

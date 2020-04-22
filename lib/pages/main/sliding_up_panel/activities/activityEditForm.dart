@@ -113,22 +113,16 @@ class _ActivityEditFormState extends State<ActivityEditForm> {
                 ),
                 actions: <Widget>[
                   Visibility(
-                    child: Material(
-                      child: InkWell(
-                          onTap: () async {
-                            final ConfirmAction action =
-                                await _deleteAlert(context);
-                            if (action == ConfirmAction.ACCEPT) {
-                              Navigator.of(context).pop();
-                            }
-                          },
-                          child: Container(
-                            width: 55,
-                            child: Icon(
-                              Icons.delete,
-                              color: Colors.black,
-                            ),
-                          )),
+                    child: IconButton(
+                      padding: EdgeInsets.only(right: 7),
+                      icon: Icon(Icons.delete, color: Colors.black),
+                      onPressed: () async {
+                        final ConfirmAction action =
+                        await _deleteAlert(context);
+                        if (action == ConfirmAction.ACCEPT) {
+                          Navigator.of(context).pop();
+                        }
+                      },
                     ),
                     visible: widget.editActivity != null ? true : false,
                   ),
