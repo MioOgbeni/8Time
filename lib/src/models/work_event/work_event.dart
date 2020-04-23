@@ -76,15 +76,16 @@ class WorkEvent {
   }
 
   static Future<WorkEvent> fromEntity(WorkEventEntity entity) async {
+    Activity activity = await injector
+        .get<FirebaseActivitiesRepository>()
+        .getActivity(entity.activityUid);
     return WorkEvent(
       entity.date,
       entity.fromTime,
       entity.toTime,
       entity.description,
       entity.geoPoint,
-      await injector
-          .get<FirebaseActivitiesRepository>()
-          .getActivity(entity.activityUid),
+      activity,
       documentUid: entity.documentUid,
     );
   }

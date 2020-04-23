@@ -41,7 +41,8 @@ class FirebaseWorkEventRepository implements WorkEventRepository {
   Stream<List<Future<WorkEvent>>> workEvents() {
     return workEventCollection.snapshots().map((snapshot) {
       return snapshot.documents
-          .map((doc) => WorkEvent.fromEntity(WorkEventEntity.fromSnapshot(doc)))
+          .map((doc) async =>
+      await WorkEvent.fromEntity(WorkEventEntity.fromSnapshot(doc)))
           .toList();
     });
   }
