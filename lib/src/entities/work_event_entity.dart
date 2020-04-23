@@ -2,9 +2,9 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:equatable/equatable.dart';
 
 class WorkEventEntity extends Equatable {
-  final DateTime date;
-  final DateTime fromTime;
-  final DateTime toTime;
+  final Timestamp date;
+  final Timestamp fromTime;
+  final Timestamp toTime;
   final String description;
   final GeoPoint geoPoint;
   final String activityUid;
@@ -37,9 +37,9 @@ class WorkEventEntity extends Equatable {
 
   static WorkEventEntity fromJson(Map<String, Object> json) {
     return WorkEventEntity(
-      json["date"] as DateTime,
-      json["timeFrom"] as DateTime,
-      json["timeTo"] as DateTime,
+      json["date"] as Timestamp,
+      json["timeFrom"] as Timestamp,
+      json["timeTo"] as Timestamp,
       json["description"] as String,
       json["geoPoint"] as GeoPoint,
       json["activityUid"] as String,

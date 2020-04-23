@@ -1,9 +1,16 @@
 import 'dart:math';
 
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:eighttime/activities_repository.dart';
+import 'package:eighttime/blocs/work_events_bloc/bloc.dart';
 import 'package:eighttime/main.dart';
-import 'package:eighttime/pages/main/timeline/timeline.dart';
+import 'package:eighttime/pages/main/loading_indicator.dart';
+import 'package:eighttime/pages/main/timeline/timeline_list.dart';
+import 'package:eighttime/service_locator.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:lipsum/lipsum.dart' as lipsum;
 import 'package:table_calendar/table_calendar.dart';
 
 class TimelineScreen extends StatefulWidget {
@@ -99,67 +106,48 @@ class _TimelineScreenState extends State<TimelineScreen> {
                       .copyWith(color: primaryColor.withOpacity(0.26))),
             ),
             Expanded(
-              child: Timeline(
-                  children: getTileWidgets(10),
-                  lineColor: Colors.black12,
-                  strokeWidth: 5,
-                  strokeCap: StrokeCap.round,
-                  primary: true,
-                  indicatorSize: 35,
-                  padding: EdgeInsets.symmetric(horizontal: 15, vertical: 10),
-                  indicators: getIndicatorWidgets(10)
+              child: BlocBuilder<WorkEventsBloc, WorkEventsState>(
+                // ignore: missing_return
+                builder: (context, state) {
+                  if (state is WorkEventsLoading) {
+                    return LoadingIndicator();
+                  }
+                  if (state is WorkEventsLoaded) {
+                    return TimelineList(workEvents: state.workEvents);
+                  }
+                },
               ),
             )
           ],
         ),
       ),
+      floatingActionButton: FloatingActionButton(
+        onPressed: () async {
+          Activity activity = await injector.get<FirebaseActivitiesRepository>()
+              .getActivity(activitiesUid[r.nextInt(activitiesUid.length)]);
+          BlocProvider.of<WorkEventsBloc>(context)
+              .add(
+            AddWorkEvent(WorkEvent(
+                Timestamp.now(),
+                Timestamp.now(),
+                Timestamp.now(),
+                lipsum.createWord(numWords: 4),
+                GeoPoint(24, 24),
+                activity
+            )),
+          );
+        },
+        child: Icon(Icons.add),
+      ),
     );
   }
 
-  List<Widget> getIndicatorWidgets(int length) {
-    final List<IconData> iconData = <IconData>[
-      Icons.play_arrow,
-      Icons.stop,
-      Icons.pause,
-      Icons.work,
-      Icons.memory,
-      Icons.exit_to_app,
-      Icons.directions_car,
-      Icons.free_breakfast,
-      Icons.developer_mode
-    ];
-    final List<Color> colorData = <Color>[
-      errorColor,
-      primaryColor,
-      Colors.blue,
-      Colors.yellow,
-      Colors.orange,
-      Colors.purple
-    ];
-    final Random r = Random();
-
-    List<Widget> list = new List<Widget>();
-    for (var i = 0; i < length; i++) {
-      list.add(Icon(iconData[r.nextInt(iconData.length)], size: 22,
-          color: colorData[r.nextInt(colorData.length)]));
-    }
-    return list;
-  }
-
-  List<Widget> getTileWidgets(int length) {
-    List<Widget> list = new List<Widget>();
-    for (var i = 0; i < length; i++) {
-      list.add(Card(
-        elevation: 2,
-        color: Colors.white,
-        child: Container(
-          height: 100,
-          width: double.infinity,
-          child: Text("Testing card"),
-        ),
-        margin: EdgeInsets.only(left: 10),
-      ));
-    }
-    return list;
-  }
+  final List<String> activitiesUid = <String>[
+    "lm89hUiIcAD6BJ6D1i0x",
+    "Ur4AgshvUh8jvDhhIBKz",
+    "Up6I8KlHCnDwveedwom1",
+    "KiDEuTBDjdv8YSn3mRJz",
+    "5wIyDr7gGBnefe1Il9GX"
+  ];
+  final Random r = Random();
 }

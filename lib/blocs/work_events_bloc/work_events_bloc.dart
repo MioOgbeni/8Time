@@ -32,16 +32,10 @@ class WorkEventsBloc extends Bloc<WorkEventsEvent, WorkEventsState> {
   }
 
   Stream<WorkEventsState> _mapLoadWorkEventsToState() async* {
+    await firebaseWorkEventRepository.setCollectionReference();
     _workEventsSubscription?.cancel();
     _workEventsSubscription = firebaseWorkEventRepository.workEvents().listen(
-      (workEvents) async {
-        List<WorkEvent> workEventList;
-        for (var item in workEvents) {
-          workEventList.add(await item);
-        }
-
-        add(WorkEventsUpdated(workEventList));
-      },
+          (workEvents) => add(WorkEventsUpdated(workEvents)),
     );
   }
 

@@ -1,6 +1,7 @@
 import 'package:eighttime/blocs/activities_bloc/bloc.dart';
 import 'package:eighttime/blocs/authentication_bloc/bloc.dart';
 import 'package:eighttime/blocs/fingerprint_bloc/bloc.dart';
+import 'package:eighttime/blocs/work_events_bloc/bloc.dart';
 import 'package:eighttime/pages/fingerprint/fingerprint_screen.dart';
 import 'package:eighttime/pages/login/login_screen.dart';
 import 'package:eighttime/pages/main/home.dart';
@@ -54,6 +55,10 @@ class App extends StatelessWidget {
               create: (context) =>
               injector.get<ActivitiesBloc>()
                 ..add(LoadActivities())),
+          BlocProvider<WorkEventsBloc>(
+              create: (context) =>
+              injector.get<WorkEventsBloc>()
+                ..add(LoadWorkEvents())),
           BlocProvider<FingerprintBloc>(
               create: (context) =>
               injector.get<FingerprintBloc>()

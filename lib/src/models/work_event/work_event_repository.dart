@@ -7,7 +7,7 @@ abstract class WorkEventRepository {
 
   Future<void> deleteWorkEvent(WorkEvent workEvent);
 
-  Stream<List<Future<WorkEvent>>> workEvents();
+  Stream<List<WorkEvent>> workEvents();
 
   Future<WorkEvent> getWorkEvent(String workEventUid);
 

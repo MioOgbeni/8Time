@@ -6,9 +6,9 @@ import 'package:flutter/material.dart';
 
 @immutable
 class WorkEvent {
-  final DateTime date;
-  final DateTime fromTime;
-  final DateTime toTime;
+  final Timestamp date;
+  final Timestamp fromTime;
+  final Timestamp toTime;
   final String description;
   final GeoPoint geoPoint;
   final Activity activity;
@@ -18,9 +18,9 @@ class WorkEvent {
       this.geoPoint, this.activity,
       {this.documentUid});
 
-  WorkEvent copyWith({DateTime date,
-    DateTime fromTime,
-    DateTime toTime,
+  WorkEvent copyWith({Timestamp date,
+    Timestamp fromTime,
+    Timestamp toTime,
     String description,
     GeoPoint geoPoint,
     Activity activity,
