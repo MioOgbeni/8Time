@@ -1,8 +1,13 @@
+import 'dart:async';
+
 import 'package:eighttime/activities_repository.dart';
-import 'package:eighttime/blocs/work_events_bloc/bloc.dart';
+import 'package:eighttime/main.dart';
 import 'package:eighttime/pages/main/timeline/timeline.dart';
+import 'package:eighttime/pages/main/timeline/workEventEditForm.dart';
+import 'package:eighttime/utils/date_util.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_spinkit/flutter_spinkit.dart';
+import 'package:quiver/async.dart';
 
 class TimelineList extends StatefulWidget {
   List<WorkEvent> workEvents;
@@ -15,6 +20,23 @@ class TimelineList extends StatefulWidget {
 
 class _TimelineListState extends State<TimelineList> {
   ScrollController _scrollController = ScrollController();
+  StreamSubscription metronomeListen;
+
+  @override
+  void initState() {
+    metronomeListen =
+        Metronome.epoch(Duration(minutes: 1)).listen((d) =>
+            setState(() {
+              print(DateTime.now());
+            }));
+    super.initState();
+  }
+
+  @override
+  void dispose() {
+    metronomeListen.cancel();
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -52,8 +74,16 @@ class _TimelineListState extends State<TimelineList> {
         child: ListTile(
           contentPadding: EdgeInsets.symmetric(horizontal: 10),
           onTap: () {
+            Navigator.push(
+                context,
+                MaterialPageRoute(
+                    builder: (context) =>
+                        WorkEventEditForm(editWorkEvent: workEvent)));
+            /*
             BlocProvider.of<WorkEventsBloc>(context)
                 .add(DeleteWorkEvent(workEvent));
+                
+             */
           },
           leading: Column(
             mainAxisAlignment: MainAxisAlignment.spaceEvenly,
@@ -61,18 +91,26 @@ class _TimelineListState extends State<TimelineList> {
               Expanded(
                 child: Container(
                     alignment: Alignment.center,
-                    child: Text("00:00"),
-                    width: 35),
+                    child: Text(DateUtil.getTimeFromDateTime(
+                        DateUtil.getDateTimeFromTimestamp(workEvent.fromTime))),
+                    width: 37),
               ),
               Expanded(
                 child: Container(
-                    alignment: Alignment.center, child: Text("-"), width: 35),
+                    alignment: Alignment.center, child: Text("-"), width: 37),
               ),
               Expanded(
                 child: Container(
                     alignment: Alignment.center,
-                    child: Text("88:88"),
-                    width: 35),
+                    child: workEvent.toTime != null
+                        ? Text(DateUtil.getTimeFromDateTime(
+                        DateUtil.getDateTimeFromTimestamp(
+                            workEvent.toTime)))
+                        : SpinKitThreeBounce(
+                      color: primaryColor,
+                      size: 15,
+                    ),
+                    width: 37),
               ),
             ],
           ),
@@ -83,13 +121,13 @@ class _TimelineListState extends State<TimelineList> {
               textWidthBasis: TextWidthBasis.longestLine,
               overflow: TextOverflow.ellipsis,
               style:
-                  TextStyle(color: Colors.black, fontWeight: FontWeight.w600),
+              TextStyle(color: Colors.black, fontWeight: FontWeight.w600),
             ),
           ),
           subtitle: Container(
             width: double.infinity,
             child: Text(
-              workEvent.description,
+              workEvent.geoPoint != null ? workEvent.address : "",
               textWidthBasis: TextWidthBasis.longestLine,
               overflow: TextOverflow.ellipsis,
               style: TextStyle(color: Colors.black),
@@ -103,10 +141,19 @@ class _TimelineListState extends State<TimelineList> {
                 child: Container(
                     alignment: Alignment.center,
                     child: Text(
-                      "8:00",
+                      workEvent.toTime != null
+                          ? DateUtil.getDifferenceBetweenTwoTimes(
+                          DateUtil.getDateTimeFromTimestamp(
+                              workEvent.fromTime),
+                          DateUtil.getDateTimeFromTimestamp(
+                              workEvent.toTime))
+                          : DateUtil.getDifferenceBetweenTwoTimes(
+                          DateUtil.getDateTimeFromTimestamp(
+                              workEvent.fromTime),
+                          DateUtil.now()),
                       style: TextStyle(fontWeight: FontWeight.bold),
                     ),
-                    width: 35),
+                    width: 37),
               ),
             ],
           ),

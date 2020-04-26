@@ -1,5 +1,8 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:intl/intl.dart';
+
 class DateUtil {
-  List<DateTime> getDisplayedWeekDays(DateTime todayDateTime) {
+  static List<DateTime> getDisplayedWeekDays(DateTime todayDateTime) {
     List<DateTime> currentWeek = new List<DateTime>();
     int dayOfWeek = todayDateTime.weekday;
 
@@ -13,5 +16,44 @@ class DateUtil {
     }
 
     return currentWeek;
+  }
+
+  static DateTime getDateTimeFromTimestamp(Timestamp timestamp) {
+    return DateTime.fromMicrosecondsSinceEpoch(
+        timestamp.microsecondsSinceEpoch);
+  }
+
+  static String getTimeFromDateTime(DateTime dateTime) {
+    return DateFormat("HH:mm").format(dateTime);
+  }
+
+  static String getDayFromDateTime(DateTime dateTime) {
+    return DateFormat("dd.MM.yyyy").format(dateTime);
+  }
+
+  static String getDifferenceBetweenTwoTimes(DateTime from, DateTime to) {
+    if (from.isAfter(to)) {
+      from = from.subtract(Duration(days: 1));
+      return formatTime(from.difference(to).abs());
+    } else {
+      return formatTime(to.difference(from));
+    }
+  }
+
+  static String formatTime(Duration duration) {
+    return [duration.inHours, duration.inMinutes].map((seg) =>
+        seg.remainder(60).toString().padLeft(2, '0')).join(':');
+  }
+
+  static DateTime now() {
+    DateTime now = DateTime.now();
+    int seconds = now.second;
+    int milSeconds = now.millisecond;
+    int microSeconds = now.microsecond;
+    now = now.subtract(Duration(microseconds: microSeconds));
+    now = now.subtract(Duration(milliseconds: milSeconds));
+    now = now.subtract(Duration(seconds: seconds));
+    print("DateTime.now(): $now");
+    return now;
   }
 }

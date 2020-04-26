@@ -1,16 +1,13 @@
 import 'dart:math';
 
-import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:eighttime/activities_repository.dart';
 import 'package:eighttime/blocs/work_events_bloc/bloc.dart';
 import 'package:eighttime/main.dart';
 import 'package:eighttime/pages/main/loading_indicator.dart';
 import 'package:eighttime/pages/main/timeline/timeline_list.dart';
-import 'package:eighttime/service_locator.dart';
+import 'package:eighttime/pages/main/timeline/workEventEditForm.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:lipsum/lipsum.dart' as lipsum;
 import 'package:table_calendar/table_calendar.dart';
 
 class TimelineScreen extends StatefulWidget {
@@ -122,20 +119,24 @@ class _TimelineScreenState extends State<TimelineScreen> {
         ),
       ),
       floatingActionButton: FloatingActionButton(
-        onPressed: () async {
+        onPressed: () {
+          Navigator.push(context,
+              MaterialPageRoute(builder: (context) => WorkEventEditForm()));
+          /*
           Activity activity = await injector.get<FirebaseActivitiesRepository>()
               .getActivity(activitiesUid[r.nextInt(activitiesUid.length)]);
           BlocProvider.of<WorkEventsBloc>(context)
               .add(
             AddWorkEvent(WorkEvent(
-                Timestamp.now(),
-                Timestamp.now(),
-                Timestamp.now(),
+                Timestamp.fromDate(DateUtil.now()),
+                Timestamp.fromDate(DateUtil.now().add(Duration(hours: 0))),
+                null,
                 lipsum.createWord(numWords: 4),
-                GeoPoint(24, 24),
+                GeoPoint(50.193455, 15.839095),
                 activity
             )),
           );
+          */
         },
         child: Icon(Icons.add),
       ),

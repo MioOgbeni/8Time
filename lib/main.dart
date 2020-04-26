@@ -14,6 +14,7 @@ import 'package:eighttime/simple_bloc_delegate.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_localizations/flutter_localizations.dart';
 
 var routes = <String, WidgetBuilder>{
   '/home': (BuildContext context) => Home(),
@@ -65,6 +66,13 @@ class App extends StatelessWidget {
                 ..add(FpInitialized()))
         ],
         child: MaterialApp(
+          localizationsDelegates: [
+            GlobalMaterialLocalizations.delegate,
+            GlobalWidgetsLocalizations.delegate,
+          ],
+          supportedLocales: [
+            const Locale('en', 'US'), // English
+          ],
           theme: ThemeData(
               primaryColor: primaryColor,
               accentColor: primaryColor,
