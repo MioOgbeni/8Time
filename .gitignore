@@ -44,4 +44,5 @@ app.*.map.json
 
 # Google Services (e.g. APIs or Firebase)
 google-services.json
-secure.xml
+android/app/src/main/res/values/secure.xml
+assets/secure.json
