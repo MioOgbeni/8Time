@@ -119,6 +119,7 @@ class _TimelineScreenState extends State<TimelineScreen> {
         ),
       ),
       floatingActionButton: FloatingActionButton(
+        backgroundColor: primaryColor,
         onPressed: () {
           Navigator.push(context,
               MaterialPageRoute(builder: (context) => WorkEventEditForm()));
@@ -138,7 +139,7 @@ class _TimelineScreenState extends State<TimelineScreen> {
           );
           */
         },
-        child: Icon(Icons.add),
+        child: Icon(Icons.add, color: Colors.white),
       ),
     );
   }

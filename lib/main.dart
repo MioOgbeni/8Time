@@ -11,8 +11,6 @@ import 'package:eighttime/pages/main/timeline/timeline_screen.dart';
 import 'package:eighttime/pages/splash/splash_screen.dart';
 import 'package:eighttime/service_locator.dart';
 import 'package:eighttime/simple_bloc_delegate.dart';
-import 'package:eighttime/utils/secret.dart';
-import 'package:eighttime/utils/secret_loader.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -29,10 +27,8 @@ const primaryColor = Color.fromRGBO(10, 154, 28, 1.0);
 const accentColor = Color.fromRGBO(10, 154, 28, 0.8);
 const errorColor = Color.fromRGBO(219, 64, 64, 1.0);
 bool isAuthenticated = false;
-Future<Secret> secret;
 
 void main() {
-  secret = SecretLoader(secretPath: "assets/secrets.json").load();
   WidgetsFlutterBinding.ensureInitialized();
   BlocSupervisor.delegate = SimpleBlocDelegate();
   setupLocator();
@@ -80,8 +76,14 @@ class App extends StatelessWidget {
           ],
           theme: ThemeData(
               primaryColor: primaryColor,
-              accentColor: primaryColor,
+              accentColor: Colors.white,
               buttonColor: primaryColor,
+              brightness: Brightness.light,
+              buttonTheme: ButtonThemeData(
+                  buttonColor: primaryColor,
+                  textTheme: ButtonTextTheme.accent
+              ),
+
               errorColor: errorColor,
               fontFamily: 'Segoe UI'),
           debugShowCheckedModeBanner: false,

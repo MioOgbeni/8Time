@@ -1,6 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:eighttime/blocs/work_events_bloc/bloc.dart';
 import 'package:eighttime/main.dart';
+import 'package:eighttime/pages/main/location_select.dart';
 import 'package:eighttime/pages/main/sliding_up_panel/activities/activities_select.dart';
 import 'package:eighttime/utils/date_util.dart';
 import 'package:eighttime/work_events_repository.dart';
@@ -8,6 +9,8 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_rounded_date_picker/rounded_picker.dart';
+import 'package:google_maps_flutter/google_maps_flutter.dart';
+import 'package:google_maps_place_picker/google_maps_place_picker.dart';
 import 'package:sliding_up_panel/sliding_up_panel.dart';
 
 // ignore: must_be_immutable
@@ -31,6 +34,7 @@ class _WorkEventEditFormState extends State<WorkEventEditForm> {
 
   final _descriptionController = TextEditingController();
   final _activityController = TextEditingController();
+  final _locationController = TextEditingController();
   final _dateController = TextEditingController();
   final _timeFromController = TextEditingController();
   final _timeToController = TextEditingController();
@@ -52,6 +56,13 @@ class _WorkEventEditFormState extends State<WorkEventEditForm> {
       if (widget.editWorkEvent.activity != null) {
         _activity = widget.editWorkEvent.activity;
         _activityController.text = widget.editWorkEvent.activity.name;
+      }
+    }
+
+    if (widget.editWorkEvent != null) {
+      if (widget.editWorkEvent.geoPoint != null) {
+        _geoPoint = widget.editWorkEvent.geoPoint;
+        _locationController.text = widget.editWorkEvent.address;
       }
     }
 
@@ -435,7 +446,7 @@ class _WorkEventEditFormState extends State<WorkEventEditForm> {
                         padding: EdgeInsets.symmetric(vertical: 10),
                       ),
                       TextFormField(
-                        controller: _descriptionController,
+                        controller: _locationController,
                         cursorColor: _cursorColor,
                         autofocus: false,
                         maxLength: 255,
@@ -451,6 +462,31 @@ class _WorkEventEditFormState extends State<WorkEventEditForm> {
                             borderSide: BorderSide(),
                           ),
                         ),
+                        onTap: () async {
+                          FocusScope.of(context).requestFocus(new FocusNode());
+
+                          LatLng currentPosition;
+                          if (_geoPoint != null) {
+                            currentPosition =
+                                LatLng(_geoPoint.latitude, _geoPoint.longitude);
+                          }
+
+                          PickResult result = await Navigator.push(
+                            context,
+                            MaterialPageRoute(builder: (context) =>
+                                LocationSelect(
+                                    mapInitialPosition: currentPosition)),
+                          );
+
+                          setState(() {
+                            if (result != null) {
+                              _geoPoint = GeoPoint(result.geometry.location.lat,
+                                  result.geometry.location.lng);
+                              _locationController.text =
+                                  result.formattedAddress;
+                            }
+                          });
+                        },
                         keyboardType: TextInputType.text,
                       ),
                       Padding(

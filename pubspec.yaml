@@ -83,7 +83,6 @@ flutter:
     - assets/
     - assets/bottom_bar/
     - assets/app_icon/
-    - assets/secrets.json
   #   - images/a_dot_burr.jpeg
   #   - images/a_dot_ham.jpeg
 
