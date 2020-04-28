@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:eighttime/pages/main/dashboard/dashboard_screen.dart';
 import 'package:eighttime/pages/main/qr_code/qr_code_screen.dart';
 import 'package:eighttime/pages/main/settings/settings_screen.dart';
@@ -26,6 +28,12 @@ class _HomeState extends State<Home> {
   PageController _pageController;
   PanelController _quickActivitiesController;
 
+  quickCloseCallback() {
+    setState(() {
+      _quickActivitiesPressed = false;
+    });
+  }
+
   @override
   void initState() {
     super.initState();
@@ -35,6 +43,11 @@ class _HomeState extends State<Home> {
     _pageController = PageController();
     _quickActivitiesController = PanelController();
     _checkBiometrics();
+  }
+
+  @override
+  void dispose() {
+    super.dispose();
   }
 
   Future<void> _checkBiometrics() async {
@@ -87,7 +100,8 @@ class _HomeState extends State<Home> {
               ],
             ),
             MySlidingUpPanel(
-                quickActivitiesController: _quickActivitiesController),
+              quickActivitiesController: _quickActivitiesController,
+              quickCloseCallback: quickCloseCallback,),
           ],
         ),
         bottomNavigationBar: Container(

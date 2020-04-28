@@ -73,8 +73,8 @@ class _WorkEventEditFormState extends State<WorkEventEditForm> {
             DateUtil.getDateTimeFromTimestamp(widget.editWorkEvent.date));
       }
     } else {
-      _date = Timestamp.fromDate(DateUtil.now());
-      _dateController.text = DateUtil.getDayFromDateTime(DateUtil.now());
+      _date = Timestamp.fromDate(DateUtil.nowOnlyDay());
+      _dateController.text = DateUtil.getDayFromDateTime(DateUtil.nowOnlyDay());
     }
 
     if (widget.editWorkEvent != null) {
@@ -222,7 +222,8 @@ class _WorkEventEditFormState extends State<WorkEventEditForm> {
                             );
                           setState(() {
                             if (selected != null) {
-                              _date = Timestamp.fromDate(selected);
+                              _date = Timestamp.fromDate(
+                                  DateUtil.nowOnlyDay(now: selected));
                               _dateController.text =
                                   DateUtil.getDayFromDateTime(selected);
                             }
@@ -530,33 +531,32 @@ class _WorkEventEditFormState extends State<WorkEventEditForm> {
                     onPressed: () {
                       // Validate returns true if the form is valid, otherwise false.
                       if (_formKey.currentState.validate()) {
-                        /*
-    if (widget.editActivity != null) {
-    BlocProvider.of<ActivitiesBloc>(context)
-        .add(
-    UpdateActivity(widget.editActivity
-        .copyWith(
-    name: _textController.text,
-    icon: IconEnum
-        .values[_currentIcon],
-    color: ColorEnum
-        .values[_currentColor],
-    order: widget
-        .editActivity.order)),
-    );
-    } else {
-    BlocProvider.of<ActivitiesBloc>(context)
-        .add(
-    AddActivity(Activity(
-    _textController.text,
-    IconEnum.values[_currentIcon],
-    ColorEnum.values[_currentColor],
-    Random().nextInt(80000),
-    )),
-    );
-    }
-    
-       */
+                        if (widget.editWorkEvent != null) {
+                          BlocProvider.of<WorkEventsBloc>(context)
+                              .add(
+                            UpdateWorkEvent(widget.editWorkEvent
+                                .copyWith(
+                                date: _date,
+                                fromTime: _fromTime,
+                                toTime: _toTime,
+                                description: _descriptionController.text,
+                                geoPoint: _geoPoint,
+                                activity: _activity
+                            )),
+                          );
+                        } else {
+                          BlocProvider.of<WorkEventsBloc>(context)
+                              .add(
+                            AddWorkEvent(WorkEvent(
+                                _date,
+                                _fromTime,
+                                _toTime,
+                                _descriptionController.text,
+                                _geoPoint,
+                                _activity
+                            )),
+                          );
+                        }
                         Navigator.pop(context);
                       }
                     },

@@ -40,7 +40,7 @@ class _TimelineListState extends State<TimelineList> {
 
   @override
   Widget build(BuildContext context) {
-    if (widget.workEvents != null) {
+    if (widget.workEvents != null && widget.workEvents.isNotEmpty) {
       return Timeline(
           controller: _scrollController,
           children: getTileWidgets(widget.workEvents),
@@ -52,7 +52,52 @@ class _TimelineListState extends State<TimelineList> {
           padding: EdgeInsets.only(left: 15, right: 15, top: 5, bottom: 15),
           indicators: getIndicatorWidgets(widget.workEvents));
     } else {
-      return Container();
+      return Column(
+        mainAxisAlignment: MainAxisAlignment.start,
+        children: <Widget>[
+          Expanded(
+            flex: 1,
+            child: Container(
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.end,
+                children: <Widget>[
+                  Icon(
+                    Icons.event_busy,
+                    color: Colors.black.withOpacity(0.09),
+                    size: 100.0,
+                  ),
+                ],
+              ),
+            ),
+          ),
+          Expanded(
+            flex: 1,
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.start,
+              crossAxisAlignment: CrossAxisAlignment.center,
+              children: <Widget>[
+                Text(
+                  "This day is empty",
+                  style: TextStyle(
+                      color: Colors.black12,
+                      fontWeight: FontWeight.w600,
+                      fontSize: 20),
+                ),
+                Text(
+                  "Create work for this day by Quick Activities",
+                  style: TextStyle(
+                      color: Colors.black12,
+                      fontWeight: FontWeight.w600,
+                      fontSize: 15),
+                ),
+                Padding(
+                  padding: EdgeInsets.only(bottom: 15),
+                ),
+              ],
+            ),
+          )
+        ],
+      );
     }
   }
 

@@ -6,6 +6,7 @@ import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:google_maps_place_picker/google_maps_place_picker.dart';
 
+
 class LocationSelect extends StatefulWidget {
   LatLng mapInitialPosition;
 
@@ -73,7 +74,7 @@ class _LocationSelectState extends State<LocationSelect> {
                   resizeToAvoidBottomInset: true,
                   automaticallyImplyAppBarLeading: false,
                   initialPosition: widget.mapInitialPosition,
-                  useCurrentLocation: true,
+                  useCurrentLocation: false,
                 );
               } else {
                 return SizedBox(

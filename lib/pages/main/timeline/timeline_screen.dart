@@ -1,10 +1,12 @@
 import 'dart:math';
 
+import 'package:eighttime/activities_repository.dart';
 import 'package:eighttime/blocs/work_events_bloc/bloc.dart';
 import 'package:eighttime/main.dart';
 import 'package:eighttime/pages/main/loading_indicator.dart';
 import 'package:eighttime/pages/main/timeline/timeline_list.dart';
 import 'package:eighttime/pages/main/timeline/workEventEditForm.dart';
+import 'package:eighttime/utils/date_util.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -24,19 +26,30 @@ class _TimelineScreenState extends State<TimelineScreen> {
   void initState() {
     super.initState();
     _calendarController = CalendarController();
+    BlocProvider.of<WorkEventsBloc>(context).add(
+        LoadWorkEvents(currentDate: DateUtil.nowOnlyDay()));
   }
 
   void goToToday() {
     print("goToToday");
+    DateTime normDateTime = DateUtil.nowOnlyDay();
+    BlocProvider.of<WorkEventsBloc>(context)
+        .add(LoadWorkEvents(currentDate: normDateTime));
+
     setState(() {
-      _calendarController.setSelectedDay(DateTime.now(), animate: true);
+      _calendarController.setSelectedDay(normDateTime, animate: true);
     });
   }
 
   void someDaySelected(DateTime date) {
     print("selected date: $date");
+    DateTime normDateTime = DateUtil.nowOnlyDay(now: date);
+    print(normDateTime);
+    BlocProvider.of<WorkEventsBloc>(context)
+        .add(LoadWorkEvents(currentDate: normDateTime));
+
     setState(() {
-      _calendarController.setSelectedDay(date, animate: true);
+      _calendarController.setSelectedDay(normDateTime, animate: true);
     });
   }
 
@@ -110,11 +123,13 @@ class _TimelineScreenState extends State<TimelineScreen> {
                     return LoadingIndicator();
                   }
                   if (state is WorkEventsLoaded) {
-                    return TimelineList(workEvents: state.workEvents);
+                    List<WorkEvent> sortedList = state.workEvents;
+                    sortedList.sort((a, b) => a.fromTime.compareTo(b.fromTime));
+                    return TimelineList(workEvents: sortedList);
                   }
                 },
-              ),
-            )
+              )
+            ),
           ],
         ),
       ),
@@ -123,21 +138,6 @@ class _TimelineScreenState extends State<TimelineScreen> {
         onPressed: () {
           Navigator.push(context,
               MaterialPageRoute(builder: (context) => WorkEventEditForm()));
-          /*
-          Activity activity = await injector.get<FirebaseActivitiesRepository>()
-              .getActivity(activitiesUid[r.nextInt(activitiesUid.length)]);
-          BlocProvider.of<WorkEventsBloc>(context)
-              .add(
-            AddWorkEvent(WorkEvent(
-                Timestamp.fromDate(DateUtil.now()),
-                Timestamp.fromDate(DateUtil.now().add(Duration(hours: 0))),
-                null,
-                lipsum.createWord(numWords: 4),
-                GeoPoint(50.193455, 15.839095),
-                activity
-            )),
-          );
-          */
         },
         child: Icon(Icons.add, color: Colors.white),
       ),

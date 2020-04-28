@@ -45,15 +45,37 @@ class DateUtil {
         seg.remainder(60).toString().padLeft(2, '0')).join(':');
   }
 
-  static DateTime now() {
-    DateTime now = DateTime.now();
+  static DateTime now({DateTime now}) {
+    if (now == null) {
+      now = DateTime.now();
+    }
     int seconds = now.second;
     int milSeconds = now.millisecond;
     int microSeconds = now.microsecond;
     now = now.subtract(Duration(microseconds: microSeconds));
     now = now.subtract(Duration(milliseconds: milSeconds));
     now = now.subtract(Duration(seconds: seconds));
-    print("DateTime.now(): $now");
+    print("DateTime.nowOnlyDay(): $now");
+    return now;
+  }
+
+  static DateTime nowOnlyDay({DateTime now}) {
+    if (now == null) {
+      now = DateTime.now();
+    }
+    var temp = now.millisecondsSinceEpoch;
+    now = DateTime.fromMillisecondsSinceEpoch(temp);
+    int hours = now.hour;
+    int minutes = now.minute;
+    int seconds = now.second;
+    int milSeconds = now.millisecond;
+    int microSeconds = now.microsecond;
+    now = now.subtract(Duration(microseconds: microSeconds));
+    now = now.subtract(Duration(milliseconds: milSeconds));
+    now = now.subtract(Duration(seconds: seconds));
+    now = now.subtract(Duration(minutes: minutes));
+    now = now.subtract(Duration(hours: hours));
+    print("DateTime.nowOnlyDay(): $now");
     return now;
   }
 }

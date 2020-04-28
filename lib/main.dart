@@ -11,6 +11,7 @@ import 'package:eighttime/pages/main/timeline/timeline_screen.dart';
 import 'package:eighttime/pages/splash/splash_screen.dart';
 import 'package:eighttime/service_locator.dart';
 import 'package:eighttime/simple_bloc_delegate.dart';
+import 'package:eighttime/utils/date_util.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -60,7 +61,7 @@ class App extends StatelessWidget {
           BlocProvider<WorkEventsBloc>(
               create: (context) =>
               injector.get<WorkEventsBloc>()
-                ..add(LoadWorkEvents())),
+                ..add(LoadWorkEvents(currentDate: DateUtil.nowOnlyDay()))),
           BlocProvider<FingerprintBloc>(
               create: (context) =>
               injector.get<FingerprintBloc>()

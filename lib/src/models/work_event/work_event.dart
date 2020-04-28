@@ -85,18 +85,32 @@ class WorkEvent {
     Activity activity = await injector
         .get<FirebaseActivitiesRepository>()
         .getActivity(entity.activityUid);
-    var coords = Coordinates(
-        entity.geoPoint.latitude, entity.geoPoint.longitude);
-    var addresses = await Geocoder.local.findAddressesFromCoordinates(coords);
-    return WorkEvent(
-      entity.date,
-      entity.fromTime,
-      entity.toTime,
-      entity.description,
-      entity.geoPoint,
-      activity,
-      documentUid: entity.documentUid,
-      address: addresses.first.addressLine,
-    );
+    if (entity.geoPoint != null) {
+      var coords = Coordinates(
+          entity.geoPoint.latitude, entity.geoPoint.longitude);
+      List<Address> addresses = await Geocoder.local
+          .findAddressesFromCoordinates(coords);
+
+      return WorkEvent(
+        entity.date,
+        entity.fromTime,
+        entity.toTime,
+        entity.description,
+        entity.geoPoint,
+        activity,
+        documentUid: entity.documentUid,
+        address: addresses.first.addressLine,
+      );
+    } else {
+      return WorkEvent(
+        entity.date,
+        entity.fromTime,
+        entity.toTime,
+        entity.description,
+        entity.geoPoint,
+        activity,
+        documentUid: entity.documentUid,
+      );
+    }
   }
 }

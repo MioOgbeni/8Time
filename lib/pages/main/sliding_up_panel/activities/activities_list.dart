@@ -1,15 +1,25 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:eighttime/activities_repository.dart';
 import 'package:eighttime/blocs/activities_bloc/bloc.dart';
+import 'package:eighttime/blocs/work_events_bloc/bloc.dart';
+import 'package:eighttime/blocs/work_events_bloc/work_events_bloc.dart';
+import 'package:eighttime/utils/date_util.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:geolocator/geolocator.dart';
+import 'package:sliding_up_panel/sliding_up_panel.dart';
 
 import 'activityEditForm.dart';
 
 // ignore: must_be_immutable
 class ActivitiesList extends StatefulWidget {
+  Function() quickCloseCallback;
   List<Activity> activities;
+  PanelController quickActivitiesController;
 
-  ActivitiesList({Key key, this.activities}) : super(key: key);
+  ActivitiesList(
+      {Key key, this.activities, this.quickActivitiesController, this.quickCloseCallback})
+      : super(key: key);
 
   @override
   _ActivitiesListState createState() => _ActivitiesListState();
@@ -53,7 +63,30 @@ class _ActivitiesListState extends State<ActivitiesList> {
                 key: ValueKey(item),
                 child: ListTile(
                     key: ValueKey(item),
-                    onTap: () {},
+                    onTap: () async {
+                      Position position = await Geolocator().getCurrentPosition(
+                          desiredAccuracy: LocationAccuracy.high);
+                      GeoPoint geoPoint;
+                      if (position != null) {
+                        geoPoint =
+                            GeoPoint(position.longitude, position.latitude);
+                      }
+
+                      BlocProvider.of<WorkEventsBloc>(context)
+                          .add(
+                        AddWorkEvent(WorkEvent(
+                            Timestamp.fromDate(DateUtil.nowOnlyDay()),
+                            Timestamp.fromDate(DateUtil.now()),
+                            null,
+                            "",
+                            geoPoint,
+                            item
+                        )),
+                      );
+
+                      widget.quickActivitiesController.close();
+                      widget.quickCloseCallback();
+                    },
                     enabled: true,
                     contentPadding: EdgeInsets.only(left: 10.0),
                     leading: Container(

@@ -10,8 +10,10 @@ import 'package:sliding_up_panel/sliding_up_panel.dart';
 // ignore: must_be_immutable
 class MySlidingUpPanel extends StatefulWidget {
   PanelController quickActivitiesController;
+  Function() quickCloseCallback;
 
-  MySlidingUpPanel({Key key, @required this.quickActivitiesController})
+  MySlidingUpPanel(
+      {Key key, @required this.quickActivitiesController, @required this.quickCloseCallback})
       : super(key: key);
 
   @override
@@ -67,7 +69,11 @@ class _MySlidingUpPanelState extends State<MySlidingUpPanel> {
                   return LoadingIndicator();
                 }
                 if (state is ActivitiesLoaded) {
-                  return ActivitiesList(activities: state.activities);
+                  return ActivitiesList(
+                      activities: state.activities,
+                      quickActivitiesController: widget
+                          .quickActivitiesController,
+                      quickCloseCallback: widget.quickCloseCallback);
                 }
               },
             ),

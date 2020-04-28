@@ -41,8 +41,6 @@ class FirebaseUserRepository extends UserRepository {
       List<Activity> activities = List();
 
       activities.add(Activity("Work", IconEnum.work, ColorEnum.green, 0));
-      activities
-          .add(Activity("End work", IconEnum.exitToApp, ColorEnum.red, 1));
 
       activities.forEach((item) => repository.addNewActivity(item));
     }

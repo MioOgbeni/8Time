@@ -2,6 +2,7 @@ import 'dart:async';
 
 import 'package:bloc/bloc.dart';
 import 'package:eighttime/blocs/work_events_bloc/bloc.dart';
+import 'package:eighttime/utils/date_util.dart';
 import 'package:eighttime/work_events_repository.dart';
 import 'package:flutter/cupertino.dart';
 
@@ -17,7 +18,7 @@ class WorkEventsBloc extends Bloc<WorkEventsEvent, WorkEventsState> {
   @override
   Stream<WorkEventsState> mapEventToState(WorkEventsEvent event) async* {
     if (event is LoadWorkEvents) {
-      yield* _mapLoadWorkEventsToState();
+      yield* _mapLoadWorkEventsToState(event);
     } else if (event is AddWorkEvent) {
       yield* _mapAddWorkEventToState(event);
     } else if (event is UpdateWorkEvent) {
@@ -31,11 +32,14 @@ class WorkEventsBloc extends Bloc<WorkEventsEvent, WorkEventsState> {
     }
   }
 
-  Stream<WorkEventsState> _mapLoadWorkEventsToState() async* {
+  Stream<WorkEventsState> _mapLoadWorkEventsToState(
+      LoadWorkEvents event) async* {
     await firebaseWorkEventRepository.setCollectionReference();
     _workEventsSubscription?.cancel();
     _workEventsSubscription = firebaseWorkEventRepository.workEvents().listen(
-          (workEvents) => add(WorkEventsUpdated(workEvents)),
+          (workEvents) => add(WorkEventsUpdated(
+          workEvents.where((item) => (DateUtil.getDateTimeFromTimestamp(
+              item.date).isAtSameMomentAs(event.currentDate))).toList())),
     );
   }
 

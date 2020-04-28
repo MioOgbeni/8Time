@@ -8,7 +8,17 @@ abstract class WorkEventsEvent extends Equatable {
   List<Object> get props => [];
 }
 
-class LoadWorkEvents extends WorkEventsEvent {}
+class LoadWorkEvents extends WorkEventsEvent {
+  final DateTime currentDate;
+
+  const LoadWorkEvents({this.currentDate});
+
+  @override
+  List<Object> get props => [currentDate];
+
+  @override
+  String toString() => 'LoadWorkEvents { currentDate: $currentDate }';
+}
 
 class AddWorkEvent extends WorkEventsEvent {
   final WorkEvent workEvent;
