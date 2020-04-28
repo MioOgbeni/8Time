@@ -1,6 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:eighttime/blocs/work_events_bloc/bloc.dart';
 import 'package:eighttime/main.dart';
+import 'package:eighttime/pages/main/sliding_up_panel/activities/activities_select.dart';
 import 'package:eighttime/utils/date_util.dart';
 import 'package:eighttime/work_events_repository.dart';
 import 'package:flutter/cupertino.dart';
@@ -29,6 +30,7 @@ class _WorkEventEditFormState extends State<WorkEventEditForm> {
   GeoPoint _geoPoint;
 
   final _descriptionController = TextEditingController();
+  final _activityController = TextEditingController();
   final _dateController = TextEditingController();
   final _timeFromController = TextEditingController();
   final _timeToController = TextEditingController();
@@ -43,6 +45,13 @@ class _WorkEventEditFormState extends State<WorkEventEditForm> {
     if (widget.editWorkEvent != null) {
       if (widget.editWorkEvent.date != null) {
         _descriptionController.text = widget.editWorkEvent.description;
+      }
+    }
+
+    if (widget.editWorkEvent != null) {
+      if (widget.editWorkEvent.activity != null) {
+        _activity = widget.editWorkEvent.activity;
+        _activityController.text = widget.editWorkEvent.activity.name;
       }
     }
 
@@ -186,9 +195,9 @@ class _WorkEventEditFormState extends State<WorkEventEditForm> {
                             borderSide: BorderSide(),
                           ),
                         ),
-                        onTap: () {
+                        onTap: () async {
                           FocusScope.of(context).requestFocus(new FocusNode());
-                          setState(() async {
+
                             DateTime selected = await showRoundedDatePicker(
                               context: context,
                               theme: ThemeData(
@@ -200,6 +209,7 @@ class _WorkEventEditFormState extends State<WorkEventEditForm> {
                               lastDate: DateTime(DateTime.now().year + 1),
                               borderRadius: 10,
                             );
+                          setState(() {
                             if (selected != null) {
                               _date = Timestamp.fromDate(selected);
                               _dateController.text =
@@ -237,20 +247,20 @@ class _WorkEventEditFormState extends State<WorkEventEditForm> {
                                 cursorColor: _cursorColor,
                                 autofocus: false,
                                 maxLength: 30,
-                                onTap: () {
+                                onTap: () async {
                                   FocusScope.of(context)
                                       .requestFocus(new FocusNode());
-                                  setState(() async {
-                                    TimeOfDay selected =
-                                        await showRoundedTimePicker(
-                                      context: context,
-                                      theme: ThemeData(
-                                          primaryColor: primaryColor,
-                                          accentColor: primaryColor,
-                                          primarySwatch: Colors.green),
-                                      borderRadius: 10,
-                                      initialTime: TimeOfDay.now(),
-                                    );
+                                  TimeOfDay selected =
+                                  await showRoundedTimePicker(
+                                    context: context,
+                                    theme: ThemeData(
+                                        primaryColor: primaryColor,
+                                        accentColor: primaryColor,
+                                        primarySwatch: Colors.green),
+                                    borderRadius: 10,
+                                    initialTime: TimeOfDay.now(),
+                                  );
+                                  setState(() {
                                     if (selected != null) {
                                       final now = DateTime.now();
                                       final datetime = DateTime(
@@ -305,10 +315,9 @@ class _WorkEventEditFormState extends State<WorkEventEditForm> {
                                 cursorColor: _cursorColor,
                                 autofocus: false,
                                 maxLength: 30,
-                                onTap: () {
+                                onTap: () async {
                                   FocusScope.of(context)
                                       .requestFocus(new FocusNode());
-                                  setState(() async {
                                     TimeOfDay selected =
                                         await showRoundedTimePicker(
                                       context: context,
@@ -319,6 +328,7 @@ class _WorkEventEditFormState extends State<WorkEventEditForm> {
                                       borderRadius: 10,
                                       initialTime: TimeOfDay.now(),
                                     );
+                                  setState(() {
                                     if (selected != null) {
                                       final now = DateTime.now();
                                       final datetime = DateTime(
@@ -366,6 +376,82 @@ class _WorkEventEditFormState extends State<WorkEventEditForm> {
                             ),
                           )
                         ],
+                      ),
+                      Padding(
+                        padding: EdgeInsets.symmetric(vertical: 10),
+                      ),
+                      TextFormField(
+                        controller: _activityController,
+                        cursorColor: _cursorColor,
+                        autofocus: false,
+                        maxLength: 255,
+                        decoration: InputDecoration(
+                          counterText: '',
+                          contentPadding: EdgeInsets.symmetric(
+                              vertical: 15.0, horizontal: 15.0),
+                          alignLabelWithHint: true,
+                          labelText: "Activity",
+                          border: OutlineInputBorder(
+                            gapPadding: 5,
+                            borderRadius: BorderRadius.circular(10.0),
+                            borderSide: BorderSide(),
+                          ),
+                        ),
+                        onTap: () async {
+                          FocusScope.of(context).requestFocus(new FocusNode());
+                          Activity result = await Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                                builder: (context) => ActivitiesSelect()),
+                          );
+
+                          setState(() {
+                            if (result != null) {
+                              _activity = result;
+                              _activityController.text = result.name;
+                            }
+                          });
+                        },
+                        validator: (val) {
+                          if (val.length == 0) {
+                            setState(() {
+                              _cursorColor = Theme
+                                  .of(context)
+                                  .errorColor;
+                            });
+                            return "Cannot be empty";
+                          } else {
+                            setState(() {
+                              _cursorColor = Theme
+                                  .of(context)
+                                  .primaryColor;
+                            });
+                            return null;
+                          }
+                        },
+                        keyboardType: TextInputType.text,
+                      ),
+                      Padding(
+                        padding: EdgeInsets.symmetric(vertical: 10),
+                      ),
+                      TextFormField(
+                        controller: _descriptionController,
+                        cursorColor: _cursorColor,
+                        autofocus: false,
+                        maxLength: 255,
+                        decoration: InputDecoration(
+                          counterText: '',
+                          contentPadding: EdgeInsets.symmetric(
+                              vertical: 15.0, horizontal: 15.0),
+                          alignLabelWithHint: true,
+                          labelText: "Location",
+                          border: OutlineInputBorder(
+                            gapPadding: 5,
+                            borderRadius: BorderRadius.circular(10.0),
+                            borderSide: BorderSide(),
+                          ),
+                        ),
+                        keyboardType: TextInputType.text,
                       ),
                       Padding(
                         padding: EdgeInsets.symmetric(vertical: 10),
