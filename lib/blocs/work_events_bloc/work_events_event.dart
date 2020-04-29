@@ -32,6 +32,18 @@ class AddWorkEvent extends WorkEventsEvent {
   String toString() => 'AddWorkEvent { workEvent: $workEvent }';
 }
 
+class CloseOpenedAndAddEvent extends WorkEventsEvent {
+  final WorkEvent workEvent;
+
+  const CloseOpenedAndAddEvent(this.workEvent);
+
+  @override
+  List<Object> get props => [workEvent];
+
+  @override
+  String toString() => 'CloseOpenedAndAddEvent { workEvent: $workEvent }';
+}
+
 class UpdateWorkEvent extends WorkEventsEvent {
   final WorkEvent workEvent;
 

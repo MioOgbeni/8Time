@@ -60,4 +60,15 @@ class FirebaseWorkEventRepository implements WorkEventRepository {
         .document(update.documentUid)
         .updateData(update.toEntity().toDocument());
   }
+
+  @override
+  Future<void> updateWorkEvents(List<WorkEvent> update) {
+    for (WorkEvent item in update) {
+      workEventCollection
+          .document(item.documentUid)
+          .updateData(item.toEntity().toDocument());
+    }
+  }
+
+
 }

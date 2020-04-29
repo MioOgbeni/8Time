@@ -21,6 +21,8 @@ class WorkEventsBloc extends Bloc<WorkEventsEvent, WorkEventsState> {
       yield* _mapLoadWorkEventsToState(event);
     } else if (event is AddWorkEvent) {
       yield* _mapAddWorkEventToState(event);
+    } else if (event is CloseOpenedAndAddEvent) {
+      yield* _mapCloseOpenedAndAddToState(event);
     } else if (event is UpdateWorkEvent) {
       yield* _mapUpdateWorkEventToState(event);
     } else if (event is UpdateWorkEvents) {
@@ -44,6 +46,23 @@ class WorkEventsBloc extends Bloc<WorkEventsEvent, WorkEventsState> {
   }
 
   Stream<WorkEventsState> _mapAddWorkEventToState(AddWorkEvent event) async* {
+    firebaseWorkEventRepository.addNewWorkEvent(event.workEvent);
+  }
+
+  Stream<WorkEventsState> _mapCloseOpenedAndAddToState(
+      CloseOpenedAndAddEvent event) async* {
+    List<WorkEvent> openedEvents = await firebaseWorkEventRepository
+        .workEvents()
+        .first;
+    List<WorkEvent> filteredEvents = openedEvents.where((item) =>
+    item.toTime == null).toList();
+
+    for (int index = 0; index < filteredEvents.length; index++) {
+      filteredEvents[index] =
+          filteredEvents[index].copyWith(toTime: event.workEvent.fromTime);
+    }
+
+    firebaseWorkEventRepository.updateWorkEvents(filteredEvents);
     firebaseWorkEventRepository.addNewWorkEvent(event.workEvent);
   }
 

@@ -12,4 +12,6 @@ abstract class WorkEventRepository {
   Future<WorkEvent> getWorkEvent(String workEventUid);
 
   Future<void> updateWorkEvent(WorkEvent workEvent);
+
+  Future<void> updateWorkEvents(List<WorkEvent> update);
 }

@@ -69,19 +69,21 @@ class _ActivitiesListState extends State<ActivitiesList> {
                       GeoPoint geoPoint;
                       if (position != null) {
                         geoPoint =
-                            GeoPoint(position.longitude, position.latitude);
+                            GeoPoint(position.latitude, position.longitude);
                       }
+
+                      WorkEvent newWorkEvent = WorkEvent(
+                          Timestamp.fromDate(DateUtil.nowOnlyDay()),
+                          Timestamp.fromDate(DateUtil.now()),
+                          null,
+                          "",
+                          geoPoint,
+                          item
+                      );
 
                       BlocProvider.of<WorkEventsBloc>(context)
                           .add(
-                        AddWorkEvent(WorkEvent(
-                            Timestamp.fromDate(DateUtil.nowOnlyDay()),
-                            Timestamp.fromDate(DateUtil.now()),
-                            null,
-                            "",
-                            geoPoint,
-                            item
-                        )),
+                        CloseOpenedAndAddEvent(newWorkEvent),
                       );
 
                       widget.quickActivitiesController.close();
