@@ -69,6 +69,4 @@ class FirebaseWorkEventRepository implements WorkEventRepository {
           .updateData(item.toEntity().toDocument());
     }
   }
-
-
 }

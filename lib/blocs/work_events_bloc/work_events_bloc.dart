@@ -1,16 +1,21 @@
 import 'dart:async';
 
 import 'package:bloc/bloc.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:eighttime/activities_repository.dart';
 import 'package:eighttime/blocs/work_events_bloc/bloc.dart';
 import 'package:eighttime/utils/date_util.dart';
 import 'package:eighttime/work_events_repository.dart';
 import 'package:flutter/cupertino.dart';
+import 'package:geolocator/geolocator.dart';
 
 class WorkEventsBloc extends Bloc<WorkEventsEvent, WorkEventsState> {
   StreamSubscription _workEventsSubscription;
   final FirebaseWorkEventRepository firebaseWorkEventRepository;
+  final FirebaseActivitiesRepository firebaseActivitiesRepository;
 
-  WorkEventsBloc({@required this.firebaseWorkEventRepository});
+  WorkEventsBloc(
+      {@required this.firebaseWorkEventRepository, @required this.firebaseActivitiesRepository});
 
   @override
   WorkEventsState get initialState => WorkEventsLoading();
@@ -23,6 +28,8 @@ class WorkEventsBloc extends Bloc<WorkEventsEvent, WorkEventsState> {
       yield* _mapAddWorkEventToState(event);
     } else if (event is CloseOpenedAndAddEvent) {
       yield* _mapCloseOpenedAndAddToState(event);
+    } else if (event is AddWorkByActivityEvent) {
+      yield* _mapAddWorkEventByActivityToState(event);
     } else if (event is UpdateWorkEvent) {
       yield* _mapUpdateWorkEventToState(event);
     } else if (event is UpdateWorkEvents) {
@@ -51,19 +58,36 @@ class WorkEventsBloc extends Bloc<WorkEventsEvent, WorkEventsState> {
 
   Stream<WorkEventsState> _mapCloseOpenedAndAddToState(
       CloseOpenedAndAddEvent event) async* {
-    List<WorkEvent> openedEvents = await firebaseWorkEventRepository
-        .workEvents()
-        .first;
-    List<WorkEvent> filteredEvents = openedEvents.where((item) =>
-    item.toTime == null).toList();
+    closeWorks(event.workEvent);
 
-    for (int index = 0; index < filteredEvents.length; index++) {
-      filteredEvents[index] =
-          filteredEvents[index].copyWith(toTime: event.workEvent.fromTime);
+    firebaseWorkEventRepository.addNewWorkEvent(event.workEvent);
+  }
+
+  Stream<WorkEventsState> _mapAddWorkEventByActivityToState(
+      AddWorkByActivityEvent event) async* {
+    Activity activity = await firebaseActivitiesRepository.getActivity(
+        event.activityUid);
+
+    Position position = await Geolocator().getCurrentPosition(
+        desiredAccuracy: LocationAccuracy.high);
+    GeoPoint geoPoint;
+    if (position != null) {
+      geoPoint =
+          GeoPoint(position.latitude, position.longitude);
     }
 
-    firebaseWorkEventRepository.updateWorkEvents(filteredEvents);
-    firebaseWorkEventRepository.addNewWorkEvent(event.workEvent);
+    WorkEvent workEvent = WorkEvent(
+        Timestamp.fromDate(DateUtil.nowOnlyDay()),
+        Timestamp.fromDate(DateUtil.now()),
+        null,
+        "",
+        geoPoint,
+        activity
+    );
+
+    closeWorks(workEvent);
+
+    firebaseWorkEventRepository.addNewWorkEvent(workEvent);
   }
 
   Stream<WorkEventsState> _mapUpdateWorkEventToState(
@@ -91,5 +115,20 @@ class WorkEventsBloc extends Bloc<WorkEventsEvent, WorkEventsState> {
   Future<void> close() {
     _workEventsSubscription?.cancel();
     return super.close();
+  }
+
+  closeWorks(WorkEvent workEvent) async {
+    List<WorkEvent> openedEvents = await firebaseWorkEventRepository
+        .workEvents()
+        .first;
+    List<WorkEvent> filteredEvents = openedEvents.where((item) =>
+    item.toTime == null).toList();
+
+    for (int index = 0; index < filteredEvents.length; index++) {
+      filteredEvents[index] =
+          filteredEvents[index].copyWith(toTime: workEvent.fromTime);
+    }
+
+    firebaseWorkEventRepository.updateWorkEvents(filteredEvents);
   }
 }

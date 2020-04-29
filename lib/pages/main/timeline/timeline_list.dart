@@ -124,11 +124,6 @@ class _TimelineListState extends State<TimelineList> {
                 MaterialPageRoute(
                     builder: (context) =>
                         WorkEventEditForm(editWorkEvent: workEvent)));
-            /*
-            BlocProvider.of<WorkEventsBloc>(context)
-                .add(DeleteWorkEvent(workEvent));
-                
-             */
           },
           leading: Column(
             mainAxisAlignment: MainAxisAlignment.spaceEvenly,

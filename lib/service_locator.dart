@@ -25,7 +25,9 @@ void setupLocator() {
   injector.registerFactory<ActivitiesBloc>(
       () => ActivitiesBloc(firebaseActivitiesRepository: injector()));
   injector.registerFactory<WorkEventsBloc>(
-          () => WorkEventsBloc(firebaseWorkEventRepository: injector()));
+          () =>
+          WorkEventsBloc(firebaseWorkEventRepository: injector(),
+              firebaseActivitiesRepository: injector()));
   injector.registerFactory<FingerprintBloc>(() => FingerprintBloc());
 
   injector.registerLazySingleton<FirebaseUserRepository>(

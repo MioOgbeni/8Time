@@ -32,6 +32,18 @@ class AddWorkEvent extends WorkEventsEvent {
   String toString() => 'AddWorkEvent { workEvent: $workEvent }';
 }
 
+class AddWorkByActivityEvent extends WorkEventsEvent {
+  final String activityUid;
+
+  const AddWorkByActivityEvent(this.activityUid);
+
+  @override
+  List<Object> get props => [activityUid];
+
+  @override
+  String toString() => 'AddWorkByActivityEvent { activityUid: $activityUid }';
+}
+
 class CloseOpenedAndAddEvent extends WorkEventsEvent {
   final WorkEvent workEvent;
 
