@@ -23,7 +23,9 @@ void setupLocator() {
   injector.registerFactory<LoginBloc>(
       () => LoginBloc(firebaseUserRepository: injector()));
   injector.registerFactory<ActivitiesBloc>(
-      () => ActivitiesBloc(firebaseActivitiesRepository: injector()));
+          () =>
+          ActivitiesBloc(firebaseActivitiesRepository: injector(),
+              firebaseWorkEventRepository: injector()));
   injector.registerFactory<WorkEventsBloc>(
           () =>
           WorkEventsBloc(firebaseWorkEventRepository: injector(),

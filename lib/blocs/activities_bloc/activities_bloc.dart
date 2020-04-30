@@ -3,13 +3,16 @@ import 'dart:async';
 import 'package:bloc/bloc.dart';
 import 'package:eighttime/activities_repository.dart';
 import 'package:eighttime/blocs/activities_bloc/bloc.dart';
+import 'package:eighttime/src/models/work_event/firebase_work_event_repository.dart';
 import 'package:flutter/cupertino.dart';
 
 class ActivitiesBloc extends Bloc<ActivitiesEvent, ActivitiesState> {
   StreamSubscription _activitiesSubscription;
   final FirebaseActivitiesRepository firebaseActivitiesRepository;
+  final FirebaseWorkEventRepository firebaseWorkEventRepository;
 
-  ActivitiesBloc({@required this.firebaseActivitiesRepository});
+  ActivitiesBloc(
+      {@required this.firebaseActivitiesRepository, @required this.firebaseWorkEventRepository});
 
   @override
   ActivitiesState get initialState => ActivitiesLoading();
@@ -55,6 +58,14 @@ class ActivitiesBloc extends Bloc<ActivitiesEvent, ActivitiesState> {
 
   Stream<ActivitiesState> _mapDeleteActivityToState(
       DeleteActivity event) async* {
+    List<WorkEvent> workEvents = (await firebaseWorkEventRepository
+        .workEvents()
+        .first).where((item) =>
+    item.activity.documentUid == event.activity.documentUid).toList();
+
+    workEvents.forEach((item) =>
+        firebaseWorkEventRepository.deleteWorkEvent(item));
+
     firebaseActivitiesRepository.deleteActivity(event.activity);
   }
 
